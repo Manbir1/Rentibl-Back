@@ -49,7 +49,8 @@ Output: id
 
 */
 router.post('/', (req,res)=>{
-
+	db.query
+	
 })
 
 /*
@@ -58,8 +59,7 @@ Description: Update game info
 URL: http://localhost:3001/api/game/{id}
 Method: PUT
 Input:
-[{
-“price”: double,
+[{	“price”: double,
 	“title”: String,
 	“ESRB”: String,
 	“description” : String,
@@ -67,7 +67,7 @@ Input:
 	“console”: String,
 	“genre”: String,
 	“A_id” : int,
-“imgURL” : String
+	“imgURL” : String
 }]
 Output: id
  */

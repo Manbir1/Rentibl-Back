@@ -11,7 +11,11 @@ Output: [{
 }]*/
 
 router.get('/',(req,res)=>{
-
+	db.query('SELECT ID FROM VIDEO_GAME',(err,rows)=>{
+		if(err)
+			throw err
+		res.status(200).send(rows)
+	})
 })
 
 
@@ -33,7 +37,7 @@ Output: [{
 }]*/
 
 router.get('/filter',(req,res)=>{
-    
+	
 })
 
 module.exports = router

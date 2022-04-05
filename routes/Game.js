@@ -24,7 +24,7 @@ router.get('/:id', (req,res)=>{
         if(err)
             throw err
         console.log('hello')
-        res.send(data)
+        res.send(data[0])
     })
 })
 
@@ -42,15 +42,22 @@ Input:
 	“publisher”: String
 	“console”: String
 	“admin_id” : int,
-	“genre”: String
-“imgURL” : String
+	“imgURL” : String
 }]
 Output: id
 
 */
 router.post('/', (req,res)=>{
-	db.query
-	
+	const q = 'INSERT INTO Video_Game (Price,Title,ESRB_Rating,Description,PublisherName,ConsoleName,Admin_ID,IMG_URL) VALUES(?,?,?,?,?,?,?,?)'
+	db.query(q,
+		[req.body.price,req.body.title,req.body.ESRB,req.body.description,req.body.publisher,req.body.console,req.body.admin_id,req.body.imgUrl],(err,data)=>{
+			if(err)
+				res.send(400);
+			db.query('SELECT LAST_INSERT_ID() AS id',(err,data)=>{
+				console.log(data)
+				res.send({id: data[0].id})
+			})
+		})
 })
 
 /*
@@ -90,10 +97,9 @@ router.get('/:id/rating', (req,res)=>{
             throw err 
         let ratingTot = 0
         for(let i = 0;i<rows.length;i++){
-            ratingTot+=rows[i].rating
+            ratingTot+=rows[i].Rating
         }
-
-        res.send({rating: (ratingTot/data.length)})
+        res.send({rating: (ratingTot/rows.length)})
     })
 })
 
@@ -115,6 +121,7 @@ Output: “review_numb”: int
 */
 router.post('/:id/review', (req,res)=>{
     const { id } = req.params
+	
 })
 
 
@@ -126,12 +133,19 @@ Method: DELETE
 Input:
 [{
 	“username” : String,
-	“Review_numb”: Int
+	"ReviewNumber": Int
 }]
 Output: “success”: boolean
 */
-router.delete('game/:id/review',(req,res)=>{
-    
+router.delete('/:id/review',(req,res)=>{
+    const { id } = req.params
+	db.query('DELETE FROM Review WHERE ID=? AND Username=? AND ReviewNumber=?',[id,req.body.username,req.body.ReviewNumber],(err,data)=>{
+		if(err || data.affectedRows == 0)
+			res.send({success: false})
+		else{
+			res.send({success: true})
+		}
+	})
 })
 
 
@@ -155,7 +169,7 @@ Output:
  */
 router.get('/:id/review', (req,res)=>{
     const { id } = req.params
-    db.query('SELECT R.username, R.rating, R.title, R.comment, R.date FROM REVIEW AS R WHERE R.ID = ?',[id], (err,rows)=>{
+    db.query('SELECT R.Username, R.Rating, R.Title, R.Comment, R.DateWritten FROM REVIEW AS R WHERE R.ID = ?',[id], (err,rows)=>{
         if(err)
             throw err
         res.send(rows)

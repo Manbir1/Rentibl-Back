@@ -10,6 +10,8 @@ const sellRoute = require('./routes/Sell')
 const stockRoute = require('./routes/Stock')
 const userRoute = require('./routes/User')
 
+app.use(express.json())
+
 app.use('/api/game',gameRoute)
 app.use('/api/cart',cartRoute)
 app.use('/api/rent',rentRoute)

@@ -1,5 +1,6 @@
 const { response } = require('express');
 const express = require('express');
+const cors = require('cors')
 const app = express();
 const PORT = 3001;
 
@@ -11,6 +12,9 @@ const stockRoute = require('./routes/Stock')
 const userRoute = require('./routes/User')
 
 app.use(express.json())
+
+
+app.use(cors());
 
 app.use('/api/game',gameRoute)
 app.use('/api/cart',cartRoute)

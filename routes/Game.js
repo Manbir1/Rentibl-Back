@@ -50,7 +50,7 @@ Output: id
 router.post('/', (req,res)=>{
 	const q = 'INSERT INTO Video_Game (Price,Title,ESRB_Rating,Description,PublisherName,ConsoleName,Admin_ID,IMG_URL) VALUES(?,?,?,?,?,?,?,?)'
 	db.query(q,
-		[req.body.price,req.body.title,req.body.ESRB,req.body.description,req.body.publisher,req.body.console,req.body.admin_id,req.body.imgUrl],(err,data)=>{
+		[req.body.price,req.body.title,req.body.ESRB,req.body.description,req.body.publisher,req.body.console,req.body.admin_id,req.body.imgURL],(err,data)=>{
 			if(err)
 				res.send(400);
 			db.query('SELECT LAST_INSERT_ID() AS id',(err,data)=>{
@@ -121,7 +121,7 @@ Output: “review_numb”: int
 */
 router.post('/:id/review', (req,res)=>{
     const { id } = req.params
-	
+
 })
 
 

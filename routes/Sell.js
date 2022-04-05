@@ -20,21 +20,33 @@ Output: “id”:int
 */
 
 router.post('/',(req,res)=>{
-	
-})
-
-
-router.post('/', (req,res)=>{
-	const q = 'INSERT INTO Video_Game (Price,Title,ESRB_Rating,Description,PublisherName,ConsoleName,Admin_ID,IMG_URL) VALUES(?,?,?,?,?,?,?,?)'
-	db.query(q,
-		[req.body.price,req.body.title,req.body.ESRB,req.body.description,req.body.publisher,req.body.console,req.body.admin_id,req.body.imgUrl],(err,data)=>{
-			if(err)
-				res.send(400);
-			db.query('SELECT LAST_INSERT_ID() AS id',(err,data)=>{
-				console.log(data)
-				res.send({id: data[0].id})
+	let newGame = false
+	let newGameID
+	db.query('SELECT ID FROM Video_Game AS V WHERE V.Title=? AND V.ConsoleName=? AND V.PublisherName=?',[req.body.Title,req.body.ConsoleName,req.body.PublisherName],(err1,data1)=>{
+		if (err1)
+			res.send(400)
+		if (data1.length == 0) {
+			newGame = true
+			db.query('INSERT INTO Video_Game (Price,Title,ESRB_Rating,Description,PublisherName,ConsoleName,Admin_ID,IMG_URL) VALUES(?,?,?,?,?,?,?,?)',
+			[null, req.body.Title, null, null, req.body.PublisherName, req.body.ConsoleName, null, null], (err2, data2)=>{
+				if (err2)
+					res.send(400)
+				db.query('SELECT LAST_INSERT_ID() AS id',(err4,data4)=>{
+					newGameID = data4[0].id
+				})
 			})
+		}
+		
+		db.query('INSERT INTO Makes_Offers (Username, ID, Location, OfferValue) VALUES(?,?,?,?)',
+		[req.body.Username, data1[0].ID, req.body.Warehouse, req.body.OfferValue], (err3, data3)=>{
+			if (err3)
+				res.send(400)
+			if (newGame)
+				res.send({ID: newGameID})
+			else
+				res.send({ID: data1[0].ID})
 		})
+	})
 })
 
 /*
@@ -58,7 +70,7 @@ router.get(('/:user', (req,res)=>{
 	const { user } = req.params
 	db.query('SELECT ID, OfferValue, Status FROM Video_Game WHERE Username=?',[user],(err,data)=>{
 		if (err)
-			throw err
+			res.send(400)
 		res.send(data)
 	})
 }))

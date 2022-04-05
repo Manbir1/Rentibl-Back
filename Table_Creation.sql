@@ -161,13 +161,16 @@ CREATE TABLE Makes_Offers
 (
     Username VARCHAR(255) NOT NULL,
     ID INT(10) NOT NULL,
+    Location VARCHAR(50) NOT NULL,
     OfferValue DECIMAL(6, 2),
     Status VARCHAR(255) DEFAULT 'Pending',
-    PRIMARY KEY (Username,ID),
+    PRIMARY KEY (Username,ID,Location),
     FOREIGN KEY (Username)
     REFERENCES Customer(Username),
     FOREIGN KEY (ID)
-    REFERENCES Video_Game(ID)
+    REFERENCES Video_Game(ID),
+    FOREIGN KEY (Location)
+    REFERENCES Warehouse(Location)
 );
 
 CREATE TABLE Contains

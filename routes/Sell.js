@@ -40,9 +40,20 @@ Output [{
 }]
 */
 
-router.get(('/:user',(req,res)=>{
-
+router.get(('/:user', (req,res)=>{
+	const { username } = req.params
+	db.query()
 }))
+
+router.get('/:id', (req,res)=>{
+    const { id } = req.params
+    db.query('SELECT * FROM VIDEO_GAME WHERE ID=?',[id],(err,data)=>{
+        if(err)
+            throw err
+        console.log('hello')
+        res.send(data)
+    })
+})
 
 /*
 Endpoint 17: Get Offers

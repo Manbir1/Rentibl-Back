@@ -20,7 +20,21 @@ Output: “id”:int
 */
 
 router.post('/',(req,res)=>{
+	
+})
 
+
+router.post('/', (req,res)=>{
+	const q = 'INSERT INTO Video_Game (Price,Title,ESRB_Rating,Description,PublisherName,ConsoleName,Admin_ID,IMG_URL) VALUES(?,?,?,?,?,?,?,?)'
+	db.query(q,
+		[req.body.price,req.body.title,req.body.ESRB,req.body.description,req.body.publisher,req.body.console,req.body.admin_id,req.body.imgUrl],(err,data)=>{
+			if(err)
+				res.send(400);
+			db.query('SELECT LAST_INSERT_ID() AS id',(err,data)=>{
+				console.log(data)
+				res.send({id: data[0].id})
+			})
+		})
 })
 
 /*

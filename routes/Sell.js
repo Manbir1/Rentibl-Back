@@ -36,16 +36,24 @@ router.post('/',(req,res)=>{
 				})
 			})
 		}
-		
-		db.query('INSERT INTO Makes_Offers (Username, ID, Location, OfferValue) VALUES(?,?,?,?)',
-		[req.body.Username, data1[0].ID, req.body.Warehouse, req.body.OfferValue], (err3, data3)=>{
-			if (err3)
-				res.send(400)
-			if (newGame)
+
+		if (newGame) {
+			db.query('INSERT INTO Makes_Offers (Username, ID, Location, OfferValue) VALUES(?,?,?,?)',
+			[req.body.Username, newGameID, req.body.Warehouse, req.body.OfferValue], (err3, data3)=>{
+				if (err3)
+					res.send(400)
 				res.send({ID: newGameID})
-			else
+			})
+		}
+		
+		else {
+			db.query('INSERT INTO Makes_Offers (Username, ID, Location, OfferValue) VALUES(?,?,?,?)',
+			[req.body.Username, data1[0].ID, req.body.Warehouse, req.body.OfferValue], (err5, data5)=>{
+				if (err5)
+					res.send(400)
 				res.send({ID: data1[0].ID})
-		})
+			})
+		}
 	})
 })
 

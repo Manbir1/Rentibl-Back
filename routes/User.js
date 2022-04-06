@@ -13,10 +13,62 @@ Output [{
 }]*/
 
 router.post('/user/login',(req,res)=>{
+    const user = req.body.Username
+    const password = req.body.Password
 
+    //Try customer login
+    db.query("SELECT * FROM CUSTOMER AS C WHERE Username = ?", [user], (err, connection) => {
+        if (err) 
+            throw (err)
+
+            //Customer username not found
+            if (connection.length == 0) {
+                console.log("--------> Customer does not exist")
+            }
+            //Customer username found
+            else{
+                const actualPass = connection[0].password
+                //correct password
+                if (actualPass == password) {
+                    console.log("---------> Login Successful")
+                    res.send({sucess: true, admin: false})
+                }
+                //incorrect password 
+                else {
+                    console.log("---------> Password Incorrect")
+                    res.send({sucess: false, admin: false})
+                }
+            }
+
+        //Try admin login
+        db.query("SELECT * FROM ADMIN AS A WHERE Username = ?", [user], (err, connection) => {
+            if (err) 
+                throw (err)
+
+            //Admin username not found
+            if (connection.length == 0) {
+                console.log("--------> Customer does not exist")
+                //Throw errors if no login info found at all
+                console.log("--------> User does not exist")
+                res.sendStatus(404)
+            }
+            //Admin username found
+            else{
+                const actualPass = connection[0].password
+                //correct password
+                if (actualPass == password) {
+                    console.log("---------> Login Successful")
+                    res.send({sucess: true, admin: true})
+                }
+                //incorrect password 
+                else {
+                    console.log("---------> Password Incorrect")
+                    res.send({sucess: false, admin: false})
+                }
+            }
+        })
+    })
 })
-
-
 
 /*Endpoint 19: Account Sign-up
 Description: Set customer information in database
@@ -37,10 +89,47 @@ Input: [{
 */
 
 router.post('/user',(req,res)=>{
-    
+    const user = req.body.Username
+    const password = req.body.Password
+    const fname = req.body.FirstName
+    const lname = req.body.LastName
+    const email = req.body.email
+    const phone = req.body.PhoneNumber
+    const cNum = req.body.cardNumber
+    const cName = req.body.cardholderName
+    const cvv = req.body.cvv
+    const expiry = req.body.exDate
+
+    //search if user already exists AS CUSTOMER
+    db.query("SELECT * FROM CUSTOMER AS C WHERE Username = ?", [user], (err, connection) => {
+        if (err) 
+            throw (err)
+
+        //insert data into CUSTOMER table if they dont exist
+        //Customer username found
+        if (connection.length != 0) {
+            console.log("--------> Customer already exists")
+            res.sendStatus(409)
+        }
+        //Customer username not found
+        else{
+            //Insert data into appropriate tables
+            db.query("INSERT INTO CUSTOMER (Username, FirstName, LastName, Email, Password, PhoneNumber) VALUES(?,?,?,?,?,?)",
+            [user, fname, lname, email, password, phone], (err, data) => {
+                if (err) 
+                    res.send(400)
+
+                
+                db.query("INSERT INTO BANKING_INFO (Card_Number, Cardholder_Name, Expiry_Date, CVV, Username) VALUES(?,?,?,?,?)",
+                [cNum, cName, expiry, cvv, user], (err, data) => {
+                    if (err) 
+                        res.send(400)
+                }) 
+            })
+            
+            res.send(201)
+        }   
+    })
 })
-
-
-
 
 module.exports = router

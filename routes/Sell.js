@@ -97,14 +97,23 @@ Output: [{
 		“g_id” : int
 		“offer_val” : double
 		“status” : string
+		"location": string
 }]
 }]
 */
 
+router.get(('/:user', (req,res)=>{
+	db.query('SELECT * FROM Admin AS A, Makes_Offers AS M, Manages AS K WHERE Admin.Admin_ID=? AND A.Admin_ID=K.Admin_ID AND M.Location=K.Location',[req.body.Admin_ID],(err,data)=>{
+		if (err)
+			res.send(400)
+		res.send(data)
+	})
+}))
+
 /*Endpoint 21: 
 Description: Admin accepts/declines offer
 URL: https://localhost:3001/api/sell/{user}/decision
-Method: POST
+Method: PUT
 Input: [{
    	“Admin_id”: int,
 	“decision”: boolean,
@@ -115,7 +124,32 @@ Output: “status”:boolean
 */
 
 router.post('/:user/decision',(req,res)=>{
-    
+	let offerLocation
+    if (req.body.decision) {
+		db.query('SELECT Location FROM Makes_Offers AS M WHERE M.Username=? AND M.ID=? AND M.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err,data)=>{
+			if (err)
+				res.send(400)
+			offerLocation = data[0].Location
+		})
+		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Approved" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err, data)=>{
+			if (err)
+				res.send(400)
+		})
+
+		db.query('UPDATE Has_Stock SET Has_Stock.Quantity=Has_Stock.Quantity+1 WHERE Has_Stock.Location=?',[offerLocation],(err2,data2)=>{
+			if (err)
+				res.send(400)
+			res.send({status: true})
+		})
+	}
+
+	else {
+		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Declined" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err, data)=>{
+			if (err)
+				res.send(400)
+			res.send({status: false})
+		})
+	}
 })
 
 module.exports = router

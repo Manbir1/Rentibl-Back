@@ -87,7 +87,7 @@ Input: [{
     "Username": string
     "Email": string
     "Password": string
-    "Phone Number": int,
+    "Phone Number": string,
     “cardNumber”:string,
     “cardholderName”: string,
     “cvv”: int,

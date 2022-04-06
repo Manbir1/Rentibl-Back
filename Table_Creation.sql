@@ -90,7 +90,7 @@ CREATE TABLE Shopping_Cart
     Username VARCHAR(20) NOT NULL,
     PRIMARY KEY (Username),
     FOREIGN KEY (Username)
-    REFERENCES Customer(Username)
+    REFERENCES Renter(Username)
 );
 
 CREATE TABLE Review
@@ -177,13 +177,16 @@ CREATE TABLE Contains
 (
     Username VARCHAR(255) NOT NULL,
     ID INT(10) NOT NULL,
+    Location VARCHAR(50) NOT NULL,
     StartDate DATE,
     DueDate DATE,
-    PRIMARY KEY (Username,ID),
+    PRIMARY KEY (Username,ID,Location),
     FOREIGN KEY (Username)
-    REFERENCES Customer(Username),
+    REFERENCES Shopping_Cart(Username),
     FOREIGN KEY (ID)
-    REFERENCES Video_Game(ID)
+    REFERENCES Video_Game(ID),
+    FOREIGN KEY (Location)
+    REFERENCES Warehouse(Location)
 );
 
 CREATE TABLE Renter

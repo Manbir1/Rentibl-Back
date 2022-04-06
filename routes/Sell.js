@@ -131,21 +131,21 @@ router.post('/:user/decision',(req,res)=>{
 				res.send(400)
 			offerLocation = data[0].Location
 		})
-		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Approved" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err, data)=>{
-			if (err)
+		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Approved" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err2, data2)=>{
+			if (err2)
 				res.send(400)
 		})
 
-		db.query('UPDATE Has_Stock SET Has_Stock.Quantity=Has_Stock.Quantity+1 WHERE Has_Stock.Location=?',[offerLocation],(err2,data2)=>{
-			if (err)
+		db.query('UPDATE Has_Stock SET Has_Stock.Quantity=Has_Stock.Quantity+1 WHERE Has_Stock.Location=?',[offerLocation],(err3,data3)=>{
+			if (err3)
 				res.send(400)
 			res.send({status: true})
 		})
 	}
 
 	else {
-		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Declined" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err, data)=>{
-			if (err)
+		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Declined" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err4, data4)=>{
+			if (err4)
 				res.send(400)
 			res.send({status: false})
 		})

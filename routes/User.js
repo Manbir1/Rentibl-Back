@@ -26,6 +26,8 @@ router.post('/login',(req,res)=>{
             //Customer username not found
             if (connection.length == 0) {
                 console.log("--------> Customer does not exist")
+                res.send({success:false, admin: null})
+                return;
             }
             //Customer username found
             else{

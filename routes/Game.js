@@ -176,4 +176,60 @@ router.get('/:id/review', (req,res)=>{
     })
 })
 
+/* 
+Endpoint 22:
+Description: Get all game consoles currently stored int the database
+URL: https://localhost:3001/api/game/consoles
+Method: GET
+Output:  [{
+	“consoles” : [string]
+}]
+
+*/
+
+router.get('/info/consoles',(req,res)=>{
+	db.query('SELECT Name FROM Console',(err,rows)=>{
+		if(err)
+			res.send([])
+		res.send(rows)
+	})
+})
+
+/* 
+Endpoint 23:
+Description: Get all game publishers currently stored int the database
+URL: https://localhost:3001/api/game/publishers
+Method: GET
+Output:  [{
+	“publishers” : [string]
+}]
+
+*/
+
+router.get('/info/publishers',(req,res)=>{
+	db.query('SELECT Name FROM Publisher',(err,rows)=>{
+		if(err)
+			res.send([])
+		res.send(rows)
+	})
+})
+
+/* 
+Endpoint 24:
+Description: Get all game locations currently stored int the database
+URL: https://localhost:3001/api/game/locations
+Method: GET
+Output:  [{
+	“locations” : [string]
+}]
+*/
+
+router.get('/info/locations',(req,res)=>{
+	db.query('SELECT DISTINCT Location FROM Publisher',(err,rows)=>{
+		if(err)
+			res.send([])
+		res.send(rows)
+	})
+})
+
 module.exports = router

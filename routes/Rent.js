@@ -22,7 +22,7 @@ router.get('/',(req,res)=>{
 /*Endpoint 14:
 Description: Get filtered games
 URL: http://localhost:3001/api/rent/filter
-Method: GET
+Method: POST
 Input: [{
 	“consoles”: [string] (array of consoles),
 	“genres”: [string] (array of genres),
@@ -33,11 +33,31 @@ Input: [{
 	“locations”: [string]
 }]
 Output: [{
-	“gIds” : [ints]
+	ID : [ints]
 }]*/
 
-router.get('/filter',(req,res)=>{
-	
+router.post('/filter',(req,res)=>{
+	db.query('SELECT * FROM VIDEO_GAME AS V, Publisher AS P WHERE V.PublisherName = P.Name',(err,data)=>{
+		if(err)
+			throw err
+
+		if(req.body.consoles.length>0){
+			data = data.filter((e)=>req.body.consoles.includes(e.ConsoleName))
+		}
+		if(req.body.publishers.length>0)
+			data = data.filter((e)=>req.body.publishers.includes(e.PublisherName))
+		if(req.body.prices.length>0)
+			data = data.filter((e)=>(e.Price>=req.body.prices[0] && e.Price<=req.body.prices[1]))
+		if(req.body.esrb_ratings.length>0)
+			data = data.filter((e)=>req.body.esrb_ratings.includes(e.ESRB_Rating))
+		//data = data.filter((e)=>e.Rating>=req.body.rating)
+		if(req.body.locations.length>0)
+			data = data.filter((e) => req.body.locations.includes(e.Location))
+
+		res.send(data.map((e)=>(e.ID)))
+	})
 })
+
+
 
 module.exports = router

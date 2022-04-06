@@ -9,12 +9,14 @@ Method: POST
 Input: Username, Password
 Output [{
 	“success” : Boolean,
-   	"admin": Boolean,
+   	"admin": Int,
 }]*/
 
-router.post('/user/login',(req,res)=>{
+router.post('/login',(req,res)=>{
     const user = req.body.Username
     const password = req.body.Password
+
+    console.log(req.body)
 
     //Try customer login
     db.query("SELECT * FROM CUSTOMER AS C WHERE Username = ?", [user], (err, connection) => {
@@ -27,16 +29,18 @@ router.post('/user/login',(req,res)=>{
             }
             //Customer username found
             else{
-                const actualPass = connection[0].password
+                const actualPass = connection[0].Password
                 //correct password
                 if (actualPass == password) {
                     console.log("---------> Login Successful")
-                    res.send({sucess: true, admin: false})
+                    res.send({success: true, admin: null})
+                    return;
                 }
                 //incorrect password 
                 else {
                     console.log("---------> Password Incorrect")
-                    res.send({sucess: false, admin: false})
+                    res.send({success: false, admin: null})
+                    return;
                 }
             }
 
@@ -51,19 +55,22 @@ router.post('/user/login',(req,res)=>{
                 //Throw errors if no login info found at all
                 console.log("--------> User does not exist")
                 res.sendStatus(404)
+                return;
             }
             //Admin username found
             else{
-                const actualPass = connection[0].password
+                const actualPass = connection[0].Password
                 //correct password
                 if (actualPass == password) {
                     console.log("---------> Login Successful")
-                    res.send({sucess: true, admin: true})
+                    res.send({success: true, admin: connection[0].Admin_ID})
+                    return;
                 }
                 //incorrect password 
                 else {
                     console.log("---------> Password Incorrect")
-                    res.send({sucess: false, admin: false})
+                    res.send({success: false, admin: null})
+                    return;
                 }
             }
         })
@@ -88,7 +95,7 @@ Input: [{
 }]
 */
 
-router.post('/user',(req,res)=>{
+router.post('/',(req,res)=>{
     const user = req.body.Username
     const password = req.body.Password
     const fname = req.body.FirstName

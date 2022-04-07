@@ -85,6 +85,16 @@ CREATE TABLE Banking_Info
     REFERENCES Customer(Username)
 );
 
+CREATE TABLE Renter
+(
+    Username VARCHAR(255) NOT NULL,
+    ShippingAddress VARCHAR(255),
+    PRIMARY KEY (Username),
+    FOREIGN KEY (Username)
+    REFERENCES Customer(Username)
+);
+
+
 CREATE TABLE Shopping_Cart
 (
     Username VARCHAR(20) NOT NULL,
@@ -182,20 +192,11 @@ CREATE TABLE Contains
     DueDate DATE,
     PRIMARY KEY (Username,ID,Location),
     FOREIGN KEY (Username)
-    REFERENCES Shopping_Cart(Username),
+    REFERENCES Customer(Username),
     FOREIGN KEY (ID)
     REFERENCES Video_Game(ID),
     FOREIGN KEY (Location)
     REFERENCES Warehouse(Location)
-);
-
-CREATE TABLE Renter
-(
-    Username VARCHAR(255) NOT NULL,
-    ShippingAddress VARCHAR(255),
-    PRIMARY KEY (Username),
-    FOREIGN KEY (Username)
-    REFERENCES Customer(Username)
 );
 
 CREATE TABLE Seller

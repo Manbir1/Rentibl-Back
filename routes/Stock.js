@@ -63,4 +63,13 @@ router.get('/',(req,res)=>{
     
 })
 
+router.get('/individual/:id',(req,res)=>{
+	const { id } = req.params
+	db.query('SELECT Location, Quantity FROM HAS_STOCK WHERE ID=?',[id],(err,data)=>{
+		if(err)
+			throw err
+		res.send(data)
+	})
+})
+
 module.exports = router

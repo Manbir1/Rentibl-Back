@@ -20,10 +20,13 @@ Output: “success”: boolean
 
 router.post('/',(req,res)=>{
 	db.query('INSERT INTO Contains (Username, ID, StartDate, DueDate, Location) VALUES(?,?,?,?,?)',
-	[req.body.Username, req.body.g_id, req.body.StartDate, req.body.DueDate, req.body.Location],(err,data)=>{
-		if (err)
+	[req.body.Username, req.body.g_id, req.body.StartDate.slice(0,10), req.body.DueDate.slice(0,10), req.body.Location],(err,data)=>{
+		if (err){
 			res.send(400)
-		res.send({success: true})
+			throw err;
+		}else{
+			res.send({success: true})
+		}
 	})
 })
 

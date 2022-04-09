@@ -20,8 +20,8 @@ Output: “id”:int
 */
 
 router.post('/',(req,res)=>{
-	let newGame = false
-	let newGameID
+	// let newGame = false
+	// let newGameID
 	db.query('SELECT ID FROM Video_Game AS V WHERE V.Title=? AND V.ConsoleName=? AND V.PublisherName=?',[req.body.Title,req.body.ConsoleName,req.body.PublisherName],(err1,data1)=>{
 		if (err1) {
 			res.send(400)

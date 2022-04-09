@@ -23,14 +23,16 @@ router.post('/',(req,res)=>{
 	let newGame = false
 	let newGameID
 	db.query('SELECT ID FROM Video_Game AS V WHERE V.Title=? AND V.ConsoleName=? AND V.PublisherName=?',[req.body.Title,req.body.ConsoleName,req.body.PublisherName],(err1,data1)=>{
-		if (err1)
+		if (err1) {
 			res.send(400)
+		}
 		if (data1.length == 0) {
 			newGame = true
 			db.query('INSERT INTO Video_Game (Price,Title,ESRB_Rating,Description,PublisherName,ConsoleName,Admin_ID,IMG_URL) VALUES(?,?,?,?,?,?,?,?)',
 			[null, req.body.Title, null, null, req.body.PublisherName, req.body.ConsoleName, null, null], (err2, data2)=>{
-				if (err2)
+				if (err2) {
 					res.send(400)
+				}
 				db.query('SELECT LAST_INSERT_ID() AS id',(err4,data4)=>{
 					newGameID = data4[0].id
 				})
@@ -40,18 +42,24 @@ router.post('/',(req,res)=>{
 		if (newGame) {
 			db.query('INSERT INTO Makes_Offers (Username, ID, Location, OfferValue) VALUES(?,?,?,?)',
 			[req.body.Username, newGameID, req.body.Warehouse, req.body.OfferValue], (err3, data3)=>{
-				if (err3)
+				if (err3) {
 					res.send(400)
-				res.send({ID: newGameID})
+				}
+				else {
+					res.send({ID: newGameID})
+				}	
 			})
 		}
 		
 		else {
 			db.query('INSERT INTO Makes_Offers (Username, ID, Location, OfferValue) VALUES(?,?,?,?)',
 			[req.body.Username, data1[0].ID, req.body.Warehouse, req.body.OfferValue], (err5, data5)=>{
-				if (err5)
+				if (err5) {
 					res.send(400)
-				res.send({ID: data1[0].ID})
+				}
+				else {
+					res.send({ID: data1[0].ID})
+				}
 			})
 		}
 	})
@@ -77,9 +85,12 @@ Output [{
 router.get(('/:user', (req,res)=>{
 	const { user } = req.params
 	db.query('SELECT ID, OfferValue, Status FROM Video_Game WHERE Username=?',[user],(err,data)=>{
-		if (err)
+		if (err) {
 			res.send(400)
-		res.send(data)
+		}
+		else {
+			res.send(data)
+		}
 	})
 }))
 
@@ -104,9 +115,12 @@ Output: [{
 
 router.get(('/:user', (req,res)=>{
 	db.query('SELECT * FROM Admin AS A, Makes_Offers AS M, Manages AS K WHERE Admin.Admin_ID=? AND A.Admin_ID=K.Admin_ID AND M.Location=K.Location',[req.body.Admin_ID],(err,data)=>{
-		if (err)
+		if (err) {
 			res.send(400)
-		res.send(data)
+		}
+		else {
+			res.send(data)
+		}
 	})
 }))
 
@@ -127,27 +141,37 @@ router.post('/:user/decision',(req,res)=>{
 	let offerLocation
     if (req.body.decision) {
 		db.query('SELECT Location FROM Makes_Offers AS M WHERE M.Username=? AND M.ID=? AND M.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err,data)=>{
-			if (err)
+			if (err) {
 				res.send(400)
-			offerLocation = data[0].Location
+			}
+			else {
+				offerLocation = data[0].Location
+			}	
 		})
 		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Approved" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err2, data2)=>{
-			if (err2)
+			if (err2) {
 				res.send(400)
+			}	
 		})
 
 		db.query('UPDATE Has_Stock SET Has_Stock.Quantity=Has_Stock.Quantity+1 WHERE Has_Stock.Location=?',[offerLocation],(err3,data3)=>{
-			if (err3)
+			if (err3) {
 				res.send(400)
-			res.send({status: true})
+			}
+			else {
+				res.send({status: true})
+			}
 		})
 	}
 
 	else {
 		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Declined" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err4, data4)=>{
-			if (err4)
+			if (err4) {
 				res.send(400)
-			res.send({status: false})
+			}
+			else {
+				res.send({status: false})
+			}
 		})
 	}
 })

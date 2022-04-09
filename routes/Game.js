@@ -119,19 +119,36 @@ Input:
 	“rating”:   Int,
 	“title” : String,
 	“comment” : String,
-	“date”: Date
 }]
 Output: {
 	“username” : String,
 	“rating”:   Int,
 	“title” : String,
 	“comment” : String,
-	“date”: Date
+	“date”: Date,
+	ReviewNumber: Int
 } if success, null otherwise
-
 */
+
 router.post('/:id/review', (req,res)=>{
     const { id } = req.params
+	db.query('SELECT MAX(ReviewNumber) AS m FROM Review WHERE id=?',[id],(err,rows)=>{
+		let max = rows[0].m
+		if(max == null){
+			max = 1
+		}else{
+			max+=1
+		}
+
+		db.query('INSERT INTO Review(ReviewNumber,Username,ID,Rating,Comment,Title,DateWritten) VALUES(?,?,?,?,?,?,CURDATE())',
+		[max,req.body.username,id,req.body.rating,req.body.comment,req.body.title],(err,rows)=>{
+			if(err)
+				throw err;
+			else{
+				res.send({Username: req.body.username, Rating: req.body.rating, Title: req.body.title, Comment:req.body.comment, ReviewNumber: max})
+			}
+		})
+	})
 })
 
 
@@ -150,8 +167,11 @@ Output: “success”: boolean
 router.delete('/:id/review',(req,res)=>{
     const { id } = req.params
 	db.query('DELETE FROM Review WHERE ID=? AND Username=? AND ReviewNumber=?',[id,req.body.username,req.body.ReviewNumber],(err,data)=>{
-		if(err || data.affectedRows == 0)
+
+		if(err || data.affectedRows == 0){
+			console.log(err)
 			res.send({success: false})
+		}
 		else{
 			res.send({success: true})
 		}
@@ -179,7 +199,7 @@ Output:
  */
 router.get('/:id/review', (req,res)=>{
     const { id } = req.params
-    db.query('SELECT R.Username, R.Rating, R.Title, R.Comment, R.DateWritten FROM REVIEW AS R WHERE R.ID = ?',[id], (err,rows)=>{
+    db.query('SELECT R.Username, R.Rating, R.Title, R.Comment, R.DateWritten, R.ReviewNumber FROM REVIEW AS R WHERE R.ID = ?',[id], (err,rows)=>{
         if(err)
             throw err
         res.send(rows)

@@ -58,6 +58,23 @@ router.post('/filter',(req,res)=>{
 	})
 })
 
+/*Endpoint 25:
+Description: Get filtered games
+URL: http://localhost:3001/api/rent/:user/games
+Method: GET
+Output: [{
+	ID : [ints]
+}]*/
+
+router.get('/:user/games',(req,res)=>{
+	const { user } = req.params
+	db.query('SELECT * FROM Rents WHERE Username=?',[user],(err,rows)=>{
+		if(err)
+			throw err
+		res.send(rows)
+	})
+})
+
 
 
 module.exports = router

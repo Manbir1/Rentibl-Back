@@ -95,11 +95,16 @@ router.get('/:id/rating', (req,res)=>{
     db.query("SELECT * FROM VIDEO_GAME AS V, REVIEW AS R WHERE R.ID=V.ID AND V.ID=?",[id],(err,rows)=>{
         if(err)
             throw err 
+
         let ratingTot = 0
         for(let i = 0;i<rows.length;i++){
             ratingTot+=rows[i].Rating
         }
-        res.send({rating: (ratingTot/rows.length)})
+
+		if(rows.length > 0)
+        	res.send({rating: (ratingTot/rows.length)})
+		else
+			res.send({rating: 0})
     })
 })
 
@@ -116,12 +121,17 @@ Input:
 	“comment” : String,
 	“date”: Date
 }]
-Output: “review_numb”: int
+Output: {
+	“username” : String,
+	“rating”:   Int,
+	“title” : String,
+	“comment” : String,
+	“date”: Date
+} if success, null otherwise
 
 */
 router.post('/:id/review', (req,res)=>{
     const { id } = req.params
-
 })
 
 

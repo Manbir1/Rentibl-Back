@@ -459,6 +459,15 @@ VALUES ("Crowfoot",1,10);
 INSERT INTO Has_Stock (Location,ID,Quantity)
 VALUES ("Webber",2,10);
 
+INSERT INTO Has_Stock (Location,ID,Quantity)
+VALUES ("Brentwood",3,10);
+
+INSERT INTO Has_Stock (Location,ID,Quantity)
+VALUES ("Forest Lawn",4,10);
+
+INSERT INTO Has_Stock (Location,ID,Quantity)
+VALUES ("Webber",5,10);
+
 INSERT INTO Manages(Location, Admin_ID)
 VALUES ("Crowfoot",1);
 

@@ -11,7 +11,7 @@ Input [{
 	“Game_ID”: Int,
 	“Username”: String,
 	“StartDate”: Date,
-	“EndDate”: Date,
+	"DueDate”: Date,
 	"Location": String
 }]
 Output: “Success”: boolean
@@ -63,7 +63,7 @@ Input: [{
 }]
 Output: [{
 	“cartArr”:[{
-		“Game_ID”: Int
+		“ID”: Int (This is game_id)
 		“StartDate”: Date,
 		“DueDate”: Date,
 		"Location": String

@@ -453,6 +453,9 @@ VALUES (
     CURDATE()
 );
 
+INSERT INTO Makes_Offers(Username,ID,Location,OfferValue,Status) 
+VALUES ("mana24129",1,"Crowfoot",29.99,"Pending");
+
 INSERT INTO Has_Stock (Location,ID,Quantity)
 VALUES ("Crowfoot",1,10);
 

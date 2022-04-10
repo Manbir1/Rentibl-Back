@@ -12,7 +12,6 @@ Input: [{
     “OfferValue”: double,
     “Title”: string,
     “ConsoleName”: string,
-    “PublisherLocation”: string,
     “PublisherName”: string,
     “WarehouseLocation”: String
 }]

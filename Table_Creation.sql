@@ -38,10 +38,10 @@ CREATE TABLE Console
 CREATE TABLE Customer
 (
     Username VARCHAR(20) NOT NULL,
-    FirstName VARCHAR(255),
-    LastName VARCHAR(255),
-    Email VARCHAR(255),
-    Password VARCHAR(255),
+    FirstName VARCHAR(255) NOT NULL,
+    LastName VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) NOT NULL,
+    Password VARCHAR(255) NOT NULL,
     PhoneNumber VARCHAR(20),
     PRIMARY KEY (Username)
 );
@@ -56,14 +56,14 @@ CREATE TABLE Publisher
 CREATE TABLE Video_Game
 (
     ID INT(10) NOT NULL AUTO_INCREMENT,
-    Price DECIMAL(6, 2),
-    Title VARCHAR(255),
-    ESRB_Rating VARCHAR(10),
+    Price DECIMAL(6, 2) NOT NULL,
+    Title VARCHAR(255) NOT NULL,
+    ESRB_Rating VARCHAR(10) NOT NULL,
     Description TEXT(65535),
-    PublisherName VARCHAR(255),
-    ConsoleName VARCHAR(30),
-    Admin_ID INT(10),
-    IMG_URL VARCHAR(1000),
+    PublisherName VARCHAR(255) NOT NULL,
+    ConsoleName VARCHAR(30) NOT NULL,
+    Admin_ID INT(10) NOT NULL,
+    IMG_URL VARCHAR(1000) NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (PublisherName)
     REFERENCES Publisher(Name),
@@ -108,9 +108,9 @@ CREATE TABLE Review
     ReviewNumber INT(10) NOT NULL,
     Username VARCHAR(20) NOT NULL,
     ID INT(10) NOT NULL,
-    Rating INT(1),
-    Comment TEXT(65535),
-    Title VARCHAR(255),
+    Rating INT(1) NOT NULL,
+    Comment TEXT(65535) NOT NULL,
+    Title VARCHAR(255) NOT NULL,
     DateWritten DATE,
     PRIMARY KEY (Username,ID,ReviewNumber),
     FOREIGN KEY (Username)

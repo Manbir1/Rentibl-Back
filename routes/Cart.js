@@ -71,8 +71,9 @@ Output: [{
 }]
  */
 
-router.get('/',(req,res)=>{
-	db.query('SELECT ID, StartDate, DueDate, Location FROM Contains AS C WHERE C.Username=?',[req.body.Username],(err,data)=>{
+router.get('/:user',(req,res)=>{
+	const { user } = req.params
+	db.query('SELECT ID, StartDate, DueDate, Location FROM Contains AS C WHERE C.Username=?',[user],(err,data)=>{
 		if (err) {
 			res.send(400)
 		} else {

@@ -23,7 +23,6 @@ router.get('/:id', (req,res)=>{
     db.query('SELECT * FROM VIDEO_GAME WHERE ID=?',[id],(err,data)=>{
         if(err)
             throw err
-        console.log('hello')
         res.send(data[0])
     })
 })
@@ -51,13 +50,47 @@ router.post('/', (req,res)=>{
 	const q = 'INSERT INTO Video_Game (Price,Title,ESRB_Rating,Description,PublisherName,ConsoleName,Admin_ID,IMG_URL) VALUES(?,?,?,?,?,?,?,?)'
 	db.query(q,
 		[req.body.price,req.body.title,req.body.ESRB,req.body.description,req.body.publisher,req.body.console,req.body.admin_id,req.body.imgURL],(err,data)=>{
-			if(err)
+			if(err){
 				res.send(400);
+			}
 			db.query('SELECT LAST_INSERT_ID() AS id',(err,data)=>{
 				console.log(data)
 				res.send({id: data[0].id})
 			})
 		})
+})
+
+/* 
+Endpoint 2:
+Description: Create game info
+URL: http://localhost:3001/api/game
+Method: DELETE
+Input:
+[{
+	"adminId",
+	"gameId"
+}]
+Output: success
+*/
+router.delete('/',(req,res)=>{
+	db.query('SELECT Admin_ID FROM Video_Game WHERE ID=?',[req.body.gameId], (err,data)=>{
+		if(err)
+			throw err 
+		if(req.body.admin_id!=data[0].Admin_ID){
+			res.send({success: false})
+			return;
+		}
+	})
+
+	db.query('DELETE FROM Video_Game WHERE ID=?',[req.body.gameId],(err,data)=>{
+		if(err || data.affectedRows == 0){
+			console.log(err)
+			res.send({success: false})
+		}
+		else{
+			res.send({success: true})
+		}
+	})
 })
 
 /*

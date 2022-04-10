@@ -96,7 +96,7 @@ Output [{
 }]
 */
 
-router.get(('/:Username', (req,res)=>{
+router.get('/:Username', (req,res)=>{
 	const { Username } = req.params
 	db.query('SELECT ID, OfferValue, Status FROM Video_Game WHERE Username=?',[Username],(err,data)=>{
 		if (err) {
@@ -107,7 +107,7 @@ router.get(('/:Username', (req,res)=>{
 			res.send(data)
 		}
 	})
-}))
+})
 
 /*
 Endpoint 17: Get Offers
@@ -128,7 +128,7 @@ Output: [{
 }]
 */
 
-router.get(('/admin/:Admin_ID', (req,res)=>{
+router.get('/admin/:Admin_ID', (req,res)=>{
 	db.query('SELECT * FROM Admin AS A, Makes_Offers AS M, Manages AS K WHERE Admin.Admin_ID=? AND A.Admin_ID=K.Admin_ID AND M.Location=K.Location',[req.body.Admin_ID],(err,data)=>{
 		if (err) {
 			res.send(400)
@@ -138,7 +138,7 @@ router.get(('/admin/:Admin_ID', (req,res)=>{
 			res.send(data)
 		}
 	})
-}))
+})
 
 /*Endpoint 21: 
 Description: Admin accepts/declines offer

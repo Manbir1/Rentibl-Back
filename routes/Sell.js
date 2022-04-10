@@ -45,8 +45,7 @@ router.post('/',(req,res)=>{
 		db.query('INSERT INTO Makes_Offers (Username, ID, Location, OfferValue) VALUES(?,?,?,?)',
 			[req.body.Username, data1[0].ID, req.body.WarehouseLocation, req.body.OfferValue], (err5, data5)=>{
 				if (err5) {
-					res.send(400)
-					return
+					throw err5
 				}
 				else {
 					res.send({ID: data1[0].ID})
@@ -88,7 +87,7 @@ Input: [{
     "Username”: string
 }]
 Output [{
-    “offers” : [{
+    “Offers” : [{
 		“ID” : int
 		“OfferValue” : double
 		“Status” : string
@@ -104,7 +103,7 @@ router.get('/:Username', (req,res)=>{
 			return
 		}
 		else {
-			res.send(data)
+			res.send({Offers: data})
 		}
 	})
 })
@@ -115,7 +114,7 @@ Description: Admin view for getting offers from a warehouses they manage
 URL: https://localhost:3001/api/sell/admin/{Admin_ID}
 Method: GET
 Input: [{
-    “Admin_id”: int
+    “Admin_ID”: int
 }]
 Output: [{
 	 “Offer” : [{
@@ -141,55 +140,51 @@ router.get('/admin/:Admin_ID', (req,res)=>{
 
 /*Endpoint 21: 
 Description: Admin accepts/declines offer
-URL: https://localhost:3001/api/sell/{user}/decision
+URL: https://localhost:3001/api/sell/admin/decision
 Method: PUT
 Input: [{
-   	“Admin_id”: int,
-	“decision”: boolean,
-	“username”: String
-	“g_id” : int
+   	“Admin_ID”: int,
+	“Decision”: boolean,
+	“Username”: String
+	“ID” : int
 }]
-Output: “status”:boolean
+Output: “Status”: boolean
 */
 
-router.post('/:user/decision',(req,res)=>{
+router.put('/admin/decision',(req,res)=>{
 	let offerLocation
-    if (req.body.decision) {
-		db.query('SELECT Location FROM Makes_Offers AS M WHERE M.Username=? AND M.ID=? AND M.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err,data)=>{
-			if (err) {
-				res.send(400)
-				return
+    if (req.body.Decision) {
+		// db.query('SELECT K.Location FROM Makes_Offers AS M, Manages AS K WHERE M.Username=? AND M.ID=? AND M.Status=? AND M.Location=K.Location AND K.Admin_ID=?',[req.body.Username, req.body.ID, "Pending", req.body.Admin_ID],(err,data)=>{
+		// 	if (err) {
+		// 		throw err
+		// 	}
+		// 	else {
+		// 		offerLocation = data[0].Location
+		// 	}	
+		// })
+		db.query('UPDATE Has_Stock AS H, (SELECT Location FROM Makes_Offers AS K WHERE K.Username=? AND K.ID=? AND K.Status=?) AS M SET H.Quantity=H.Quantity+1 WHERE H.Location=M.Location AND H.ID=?',[req.body.Username, req.body.ID, "Pending", req.body.ID],(err3,data3)=>{
+			if (err3) {
+				throw err3
 			}
 			else {
-				offerLocation = data[0].Location
-			}	
-		})
-		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Approved" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err2, data2)=>{
-			if (err2) {
-				res.send(400)
-				return
-			}	
+				res.send({Status: true})
+			}
 		})
 
-		db.query('UPDATE Has_Stock SET Has_Stock.Quantity=Has_Stock.Quantity+1 WHERE Has_Stock.Location=?',[offerLocation],(err3,data3)=>{
-			if (err3) {
-				res.send(400)
-				return
-			}
-			else {
-				res.send({status: true})
-			}
+		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Approved" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.body.Username, req.body.ID, "Pending"],(err2, data2)=>{
+			if (err2) {
+				throw err2
+			}	
 		})
 	}
 
 	else {
-		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Declined" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.params.Username, req.body.g_id, "Pending"],(err4, data4)=>{
+		db.query('UPDATE Makes_Offers SET Makes_Offers.Status="Declined" WHERE Makes_Offers.Username=? AND Makes_Offers.ID=? AND Makes_Offers.Status=?',[req.body.Username, req.body.ID, "Pending"],(err4, data4)=>{
 			if (err4) {
-				res.send(400)
-				return
+				throw err4
 			}
 			else {
-				res.send({status: false})
+				res.send({Status: false})
 			}
 		})
 	}

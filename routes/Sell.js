@@ -98,7 +98,7 @@ Output [{
 
 router.get('/:Username', (req,res)=>{
 	const { Username } = req.params
-	db.query('SELECT ID, OfferValue, Status FROM Video_Game WHERE Username=?',[Username],(err,data)=>{
+	db.query('SELECT ID, OfferValue, Status FROM Makes_Offers WHERE Username=?',[Username],(err,data)=>{
 		if (err) {
 			throw err
 			return
@@ -118,24 +118,23 @@ Input: [{
     “Admin_id”: int
 }]
 Output: [{
-	 “offers” : [{
-		“username”: String
-		“g_id” : int
-		“offer_val” : double
-		“status” : string
-		"location": string
+	 “Offer” : [{
+		“Username”: String
+		“ID” : int
+		“OfferValue” : double
+		“Status” : string
+		"Location": string
 }]
 }]
 */
 
 router.get('/admin/:Admin_ID', (req,res)=>{
-	db.query('SELECT * FROM Admin AS A, Makes_Offers AS M, Manages AS K WHERE Admin.Admin_ID=? AND A.Admin_ID=K.Admin_ID AND M.Location=K.Location',[req.body.Admin_ID],(err,data)=>{
+	db.query('SELECT M.Username, ID, OfferValue, Status, M.Location FROM Admin AS A, Makes_Offers AS M, Manages AS K WHERE A.Admin_ID=? AND A.Admin_ID=K.Admin_ID AND M.Location=K.Location',[req.params.Admin_ID],(err,data)=>{
 		if (err) {
-			res.send(400)
-			return
+			throw err
 		}
 		else {
-			res.send(data)
+			res.send({Offers: data})
 		}
 	})
 })

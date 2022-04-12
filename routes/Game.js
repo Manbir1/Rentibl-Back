@@ -73,24 +73,30 @@ Input:
 Output: success
 */
 router.delete('/',(req,res)=>{
+
+	let adminValid = true
+
 	db.query('SELECT Admin_ID FROM Video_Game WHERE ID=?',[req.body.gameId], (err,data)=>{
 		if(err)
 			throw err 
-		if(req.body.admin_id!=data[0].Admin_ID){
-			res.send({success: false})
-			return;
+		if(data.length == 0|| req.body.adminId!=data[0].Admin_ID){
+			adminValid = false
 		}
 	})
 
-	db.query('DELETE FROM Video_Game WHERE ID=?',[req.body.gameId],(err,data)=>{
-		if(err || data.affectedRows == 0){
-			console.log(err)
-			res.send({success: false})
-		}
-		else{
-			res.send({success: true})
-		}
-	})
+	if(adminValid){
+		const q = 'UPDATE Video_Game SET Price=?, Title=?, ESRB_Rating=?, Description=?, PublisherName=?, ConsoleName=?, IMG_URL=? WHERE ID=?'
+		db.query(q,[req.body.gameId],(err,data)=>{
+			if(err || data.affectedRows == 0){
+				res.send({success: false})
+			}
+			else{
+				res.send({success: true})
+			}
+		})
+	}else{
+		res.send({success: false})
+	}
 })
 
 /*
@@ -112,7 +118,22 @@ Input:
 Output: id
  */
 router.put('/', (req,res)=>{
+	let adminValid = true
 
+	db.query('SELECT Admin_ID FROM Video_Game WHERE ID=?',[req.body.gameId], (err,data)=>{
+		if(err)
+			throw err 
+		if(data.length == 0|| req.body.adminId!=data[0].Admin_ID){
+			adminValid = false
+		}
+	})
+
+	if(adminValid){
+		db.query('DELETE FROM Video_Game WHERE ID=?',[req.body.gameId],(err,data)=>{
+		})
+	}else{
+		res.send({success: false})
+	}
 })
 
 /* 

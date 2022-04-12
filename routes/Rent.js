@@ -50,7 +50,8 @@ router.post('/filter',(req,res)=>{
 			data = data.filter((e)=>(e.Price>=req.body.prices[0] && e.Price<=req.body.prices[1]))
 		if(req.body.esrb_ratings.length>0)
 			data = data.filter((e)=>req.body.esrb_ratings.includes(e.ESRB_Rating))
-		//data = data.filter((e)=>e.Rating>=req.body.rating)
+		if(req.body.rating != null)
+			data = data.filter((e)=>e.Rating>=req.body.rating)
 		if(req.body.locations.length>0)
 			data = data.filter((e) => req.body.locations.includes(e.Location))
 
@@ -59,7 +60,7 @@ router.post('/filter',(req,res)=>{
 })
 
 /*Endpoint 25:
-Description: Get filtered games
+Description: Get games user rents
 URL: http://localhost:3001/api/rent/:user/games
 Method: GET
 Output: [{

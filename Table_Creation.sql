@@ -117,6 +117,7 @@ CREATE TABLE Review
     REFERENCES Customer(Username),
     FOREIGN KEY (ID)
     REFERENCES Video_Game(ID)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Has_Stock
@@ -129,6 +130,7 @@ CREATE TABLE Has_Stock
     REFERENCES Warehouse(Location),
     FOREIGN KEY (ID)
     REFERENCES Video_Game(ID)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Manages
@@ -151,6 +153,7 @@ CREATE TABLE Categorized
     REFERENCES Genre(GenreName),
     FOREIGN KEY (ID)
     REFERENCES Video_Game(ID)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Rents
@@ -165,6 +168,7 @@ CREATE TABLE Rents
     REFERENCES Customer(Username),
     FOREIGN KEY (ID)
     REFERENCES Video_Game(ID)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE Makes_Offers
@@ -178,7 +182,8 @@ CREATE TABLE Makes_Offers
     FOREIGN KEY (Username)
     REFERENCES Customer(Username),
     FOREIGN KEY (ID)
-    REFERENCES Video_Game(ID),
+    REFERENCES Video_Game(ID)
+    ON DELETE CASCADE,
     FOREIGN KEY (Location)
     REFERENCES Warehouse(Location)
 );
@@ -194,7 +199,8 @@ CREATE TABLE Contains
     FOREIGN KEY (Username)
     REFERENCES Customer(Username),
     FOREIGN KEY (ID)
-    REFERENCES Video_Game(ID),
+    REFERENCES Video_Game(ID)
+    ON DELETE CASCADE,
     FOREIGN KEY (Location)
     REFERENCES Warehouse(Location)
 );

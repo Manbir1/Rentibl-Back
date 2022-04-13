@@ -152,6 +152,7 @@ Output: “Status”: boolean
 
 router.put('/admin/decision',(req,res)=>{
 	let offerLocation
+	console.log(req.body)
     if (req.body.Decision) {
 		// db.query('SELECT K.Location FROM Makes_Offers AS M, Manages AS K WHERE M.Username=? AND M.ID=? AND M.Status=? AND M.Location=K.Location AND K.Admin_ID=?',[req.body.Username, req.body.ID, "Pending", req.body.Admin_ID],(err,data)=>{
 		// 	if (err) {
@@ -183,7 +184,7 @@ router.put('/admin/decision',(req,res)=>{
 				throw err4
 			}
 			else {
-				res.send({Status: false})
+				res.send({Status: true})
 			}
 		})
 	}

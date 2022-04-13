@@ -83,9 +83,9 @@ router.delete('/',(req,res)=>{
 			adminValid = false
 		}
 	})
-
+	console.log(adminValid)
 	if(adminValid){
-		const q = 'UPDATE Video_Game SET Price=?, Title=?, ESRB_Rating=?, Description=?, PublisherName=?, ConsoleName=?, IMG_URL=? WHERE ID=?'
+		const q = 'DELETE FROM Video_Game WHERE ID=?'
 		db.query(q,[req.body.gameId],(err,data)=>{
 			if(err || data.affectedRows == 0){
 				res.send({success: false})
@@ -117,8 +117,10 @@ Input:
 }]
 Output: id
  */
-router.put('/', (req,res)=>{
+router.put('/:id', (req,res)=>{
 	let adminValid = true
+
+	const { id } = req.params
 
 	db.query('SELECT Admin_ID FROM Video_Game WHERE ID=?',[req.body.gameId], (err,data)=>{
 		if(err)
@@ -129,10 +131,19 @@ router.put('/', (req,res)=>{
 	})
 
 	if(adminValid){
-		db.query('DELETE FROM Video_Game WHERE ID=?',[req.body.gameId],(err,data)=>{
+		const q = 'UPDATE Video_Game SET Price = ?, Title = ?, ESRB_Rating = ?, Description = ?, PublisherName = ?, ConsoleName = ?, IMG_URL = ? WHERE ID=?'
+		db.query(q,[req.body.price,req.body.title,req.body.ESRB,req.body.description,req.body.publisher,req.body.console,req.body.imgURL,id]
+			,(err,data)=>{
+			if(err){
+				console.log(id)
+				res.send({id: -1});
+				throw err
+			}else{
+				res.send({id: id})
+			}
 		})
 	}else{
-		res.send({success: false})
+		res.send({id: id})
 	}
 })
 
@@ -312,7 +323,18 @@ router.get('/info/locations',(req,res)=>{
 	db.query('SELECT DISTINCT Location FROM Publisher',(err,rows)=>{
 		if(err)
 			res.send([])
-		res.send(rows)
+		else
+			res.send(rows)
+	})
+})
+
+router.get('/info/warehouses',(req,res)=>{
+	db.query('SELECT * FROM Warehouse', (err,rows)=>{
+		if(err)
+			res.send([])
+		else 
+			res.send(rows)
+
 	})
 })
 

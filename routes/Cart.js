@@ -23,6 +23,7 @@ router.post('/',(req,res)=>{
 	[req.body.Username, req.body.Game_ID, req.body.StartDate.slice(0, 10), req.body.DueDate.slice(0, 10), req.body.Location],(err,data)=>{
 		if (err) {
 			res.send(400)
+			throw err
 		} else {
 			res.send({Success: true})
 		}

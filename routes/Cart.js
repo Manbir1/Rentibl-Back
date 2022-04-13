@@ -57,24 +57,24 @@ router.delete('/',(req,res)=>{
 /*
 Endpoint 10:
 Description: Get all items from a shopping cart
-URL: http://localhost:3001/api/cart
+URL: http://localhost:3001/api/cart/{Username}
 Method: GET
 Input: [{
 	“Username”: String
 }]
 Output: [{
-	“cartArr”:[{
+	[{
 		“ID”: Int (This is game_id)
 		“StartDate”: Date,
 		“DueDate”: Date,
 		"Location": String
-}]
+	}]
 }]
  */
 
-router.get('/:user',(req,res)=>{
-	const { user } = req.params
-	db.query('SELECT ID, StartDate, DueDate, Location FROM Contains AS C WHERE C.Username=?',[user],(err,data)=>{
+router.get('/:Username',(req,res)=>{
+	const { Username } = req.params
+	db.query('SELECT ID, StartDate, DueDate, Location FROM Contains AS C WHERE C.Username=?',[Username],(err,data)=>{
 		if (err) {
 			res.send(400)
 		} else {
@@ -86,7 +86,7 @@ router.get('/:user',(req,res)=>{
 /*
 Endpoint 20: Checkout
 Description: User purchases item and purchase is stored in database
-URL: https://localhost:3001/api/cart/checkout
+URL: http://localhost:3001/api/cart/checkout
 Method: POST
 Input: [{
 	“Username”: String

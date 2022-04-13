@@ -186,12 +186,11 @@ Input:
 	“comment” : String,
 }]
 Output: {
-	“username” : String,
-	“rating”:   Int,
-	“title” : String,
-	“comment” : String,
-	“date”: Date,
-	ReviewNumber: Int
+	“Username” : String,
+	“Rating”:   Int,
+	“Title” : String,
+	“Comment” : String,
+	"ReviewNumber": Int
 } if success, null otherwise
 */
 
@@ -253,13 +252,14 @@ Method: GET
 Input: None
 Output:
 [{
-	“reviewArr”: [{
-	“username” : String,
-	“rating”:   Int,
-	“title” : String,
-	“comment” : String,
-	“date”: Date
-}]
+	[{
+	“Username” : String,
+	“Rating”:   Int,
+	“Title” : String,
+	“Comment” : String,
+	“DateWritten”: Date,
+	"ReviewNumber: Int
+	}]
 }]
  */
 router.get('/:id/review', (req,res)=>{
@@ -274,7 +274,7 @@ router.get('/:id/review', (req,res)=>{
 /* 
 Endpoint 22:
 Description: Get all game consoles currently stored int the database
-URL: https://localhost:3001/api/game/consoles
+URL: http://localhost:3001/api/game/info/consoles
 Method: GET
 Output:  [{
 	“consoles” : [string]
@@ -293,7 +293,7 @@ router.get('/info/consoles',(req,res)=>{
 /* 
 Endpoint 23:
 Description: Get all game publishers currently stored int the database
-URL: https://localhost:3001/api/game/publishers
+URL: http://localhost:3001/api/game/info/publishers
 Method: GET
 Output:  [{
 	“publishers” : [string]
@@ -312,7 +312,7 @@ router.get('/info/publishers',(req,res)=>{
 /* 
 Endpoint 24:
 Description: Get all game locations currently stored int the database
-URL: https://localhost:3001/api/game/locations
+URL: http://localhost:3001/api/game/info/locations
 Method: GET
 Output:  [{
 	“locations” : [string]

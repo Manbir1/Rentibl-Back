@@ -16,8 +16,8 @@ CREATE TABLE Admin
     Admin_ID INT(10) NOT NULL AUTO_INCREMENT,
     FirstName VARCHAR(255),
     LastName VARCHAR(255),
-    Username VARCHAR(20),
-    Password VARCHAR(30),
+    Username VARCHAR(20) NOT NULL,
+    Password VARCHAR(30) NOT NULL,
     PRIMARY KEY (Admin_ID)
 );
 

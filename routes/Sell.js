@@ -80,7 +80,7 @@ router.post('/',(req,res)=>{
 /*
 Endpoint 16: Making offers (Displaying previous offers they’ve made)
 Description: Get previous offers
-URL: https://localhost:3001/api/sell/{Username}
+URL: http://localhost:3001/api/sell/{Username}
 Method: GET
 Input: [{
     "Username”: string
@@ -110,7 +110,7 @@ router.get('/:Username', (req,res)=>{
 /*
 Endpoint 17: Get Offers
 Description: Admin view for getting offers from a warehouses they manage
-URL: https://localhost:3001/api/sell/admin/{Admin_ID}
+URL: http://localhost:3001/api/sell/admin/{Admin_ID}
 Method: GET
 Input: [{
     “Admin_ID”: int
@@ -139,7 +139,7 @@ router.get('/admin/:Admin_ID', (req,res)=>{
 
 /*Endpoint 21: 
 Description: Admin accepts/declines offer
-URL: https://localhost:3001/api/sell/admin/decision
+URL: http://localhost:3001/api/sell/admin/decision
 Method: PUT
 Input: [{
    	“Admin_ID”: int,
@@ -152,7 +152,7 @@ Output: “Status”: boolean
 
 router.put('/admin/decision',(req,res)=>{
 	let offerLocation
-	console.log(req.body)
+	// console.log(req.body)
     if (req.body.Decision) {
 		// db.query('SELECT K.Location FROM Makes_Offers AS M, Manages AS K WHERE M.Username=? AND M.ID=? AND M.Status=? AND M.Location=K.Location AND K.Admin_ID=?',[req.body.Username, req.body.ID, "Pending", req.body.Admin_ID],(err,data)=>{
 		// 	if (err) {

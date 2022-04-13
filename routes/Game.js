@@ -61,8 +61,8 @@ router.post('/', (req,res)=>{
 })
 
 /* 
-Endpoint 2:
-Description: Create game info
+Endpoint 3:
+Description: Delete game info
 URL: http://localhost:3001/api/game
 Method: DELETE
 Input:
@@ -116,7 +116,7 @@ Input:
 	“imgURL” : String
 }]
 Output: id
- */
+*/
 router.put('/:id', (req,res)=>{
 	let adminValid = true
 

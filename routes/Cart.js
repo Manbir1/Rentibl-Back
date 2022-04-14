@@ -22,11 +22,12 @@ Output: {
 
 router.post('/',(req,res)=>{
 
-	db.query('SELECT * FROM Rents WHERE Username=? AND ID=?',[req.body.Username,req.body.ID],(err,data)=>{
+	db.query('SELECT * FROM Rents WHERE Username=? AND ID=?',[req.body.Username,req.body.Game_ID],(err,data)=>{
 		if(err){
 			res.send({Success: false, Message: "Failed to add to cart"})
 		}
 		else{
+			console.log(data)
 			if(data.length>0){
 				res.send({Success: false, Message: "Can't add game you are already renting"})
 			}else{

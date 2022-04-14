@@ -127,7 +127,7 @@ Output: [{
 */
 
 router.get('/admin/:Admin_ID', (req,res)=>{
-	db.query('SELECT M.Username, ID, OfferValue, Status, M.Location FROM Admin AS A, Makes_Offers AS M, Manages AS K WHERE A.Admin_ID=? AND A.Admin_ID=K.Admin_ID AND M.Location=K.Location',[req.params.Admin_ID],(err,data)=>{
+	db.query('SELECT M.Username, ID, OfferValue, Status, M.Location FROM Admin AS A, Makes_Offers AS M, Manages AS K WHERE A.Admin_ID=? AND A.Admin_ID=K.Admin_ID AND M.Location=K.Location AND Status="Pending"',[req.params.Admin_ID],(err,data)=>{
 		if (err) {
 			throw err
 		}
@@ -151,23 +151,36 @@ Output: “Status”: boolean
 */
 
 router.put('/admin/decision',(req,res)=>{
-	let offerLocation
-	// console.log(req.body)
     if (req.body.Decision) {
-		// db.query('SELECT K.Location FROM Makes_Offers AS M, Manages AS K WHERE M.Username=? AND M.ID=? AND M.Status=? AND M.Location=K.Location AND K.Admin_ID=?',[req.body.Username, req.body.ID, "Pending", req.body.Admin_ID],(err,data)=>{
-		// 	if (err) {
-		// 		throw err
-		// 	}
-		// 	else {
-		// 		offerLocation = data[0].Location
-		// 	}	
-		// })
-		db.query('UPDATE Has_Stock AS H, (SELECT Location FROM Makes_Offers AS K WHERE K.Username=? AND K.ID=? AND K.Status=?) AS M SET H.Quantity=H.Quantity+1 WHERE H.Location=M.Location AND H.ID=?',[req.body.Username, req.body.ID, "Pending", req.body.ID],(err3,data3)=>{
-			if (err3) {
-				throw err3
-			}
-			else {
-				res.send({Status: true})
+
+		let location = ''
+
+		db.query('SELECT Location FROM Makes_Offers AS K WHERE K.Username=? AND K.ID=? AND K.Status=?',[req.body.Username,req.body.ID,"Pending"],(err,data)=>{
+			if(err)
+				throw err
+			location = data[0].Location
+		})
+
+		db.query('SELECT * FROM Has_Stock AS H WHERE Location=? AND ID = ?',[location,req.body.ID],(err,data)=>{
+			if(err)
+				throw err 
+			if(data.length == 0){
+				db.query('INSERT INTO Has_Stock(Location,ID,Quantity) VALUES(?,?,?)',[location,req.body.ID,1],(err1,data)=>{
+					if(err1)
+						throw err1 
+					else{
+						res.send({Status: true})
+					}
+				})
+			}else{
+				db.query('UPDATE Has_Stock AS H, (SELECT Location FROM Makes_Offers AS K WHERE K.Username=? AND K.ID=? AND K.Status=?) AS M SET H.Quantity=H.Quantity+1 WHERE H.Location=M.Location AND H.ID=?',[req.body.Username, req.body.ID, "Pending", req.body.ID],(err3,data3)=>{
+					if (err3) {
+						throw err3
+					}
+					else {
+						res.send({Status: true})
+					}
+				})
 			}
 		})
 

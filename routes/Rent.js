@@ -41,6 +41,8 @@ router.post('/filter',(req,res)=>{
 		if(err)
 			throw err
 
+		console.log(req.body)
+
 		if(req.body.consoles.length>0){
 			data = data.filter((e)=>req.body.consoles.includes(e.ConsoleName))
 		}
@@ -50,7 +52,7 @@ router.post('/filter',(req,res)=>{
 			data = data.filter((e)=>(e.Price>=req.body.prices[0] && e.Price<=req.body.prices[1]))
 		if(req.body.esrb_ratings.length>0)
 			data = data.filter((e)=>req.body.esrb_ratings.includes(e.ESRB_Rating))
-		//data = data.filter((e)=>e.Rating>=req.body.rating)
+		//data = data.filter((e)=>getRating(e.ID)>=req.body.rating)
 		if(req.body.locations.length>0)
 			data = data.filter((e) => req.body.locations.includes(e.Location))
 

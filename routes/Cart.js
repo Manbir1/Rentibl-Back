@@ -98,8 +98,7 @@ router.post('/checkout',(req,res)=>{
 	db.query('SELECT * FROM Contains AS C WHERE C.Username=?',[req.body.Username],(err,data)=>{
 		if (err) {
 			res.send(400)
-			console.log("ERR1")
-			return
+			throw err
 		} 
 		else 
 		{
@@ -111,10 +110,7 @@ router.post('/checkout',(req,res)=>{
 				db.query('INSERT INTO Rents (Username, ID, DeliveryDate, StartDate, DueDate) VALUES(?,?,?,?,?)',
 				[req.body.Username, data[i].ID, d, data[i].StartDate, data[i].DueDate],(err2,data2)=>{
 					if (err2) {
-						console.log("err2")
-						res.send(400)
-						throw err2
-						return
+						// renting same game 
 					}	
 				})
 			}

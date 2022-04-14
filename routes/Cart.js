@@ -20,28 +20,33 @@ Output: {
 	}
 */
 
-router.post('/',(req,res)=>{
+const dayInMili = 86400000
 
-	db.query('SELECT * FROM Rents WHERE Username=? AND ID=?',[req.body.Username,req.body.Game_ID],(err,data)=>{
-		if(err){
-			res.send({Success: false, Message: "Failed to add to cart"})
-		}
-		else{
-			console.log(data)
-			if(data.length>0){
-				res.send({Success: false, Message: "Can't add game you are already renting"})
-			}else{
-				db.query('INSERT INTO Contains (Username, ID, StartDate, DueDate, Location) VALUES(?,?,?,?,?)',
-				[req.body.Username, req.body.Game_ID, req.body.StartDate.slice(0, 10), req.body.DueDate.slice(0, 10), req.body.Location],(err1,rows)=>{
-					if (err1) {
-						res.send({Success: false, Message: "Failed to add to cart"})
-					} else {
-						res.send({Success: true, Message: "Item added to cart"})
-					}
-				})
+router.post('/',(req,res)=>{
+	const dateDiff = new Date(req.body.DueDate) - new Date(req.body.StartDate)
+	if(dateDiff >= 86400000){
+		db.query('SELECT * FROM Rents WHERE Username=? AND ID=?',[req.body.Username,req.body.Game_ID],(err,data)=>{
+			if(err){
+				res.send({Success: false, Message: "Failed to add to cart"})
 			}
-		}
-	})
+			else{
+				if(data.length>0){
+					res.send({Success: false, Message: "Can't add game you are already renting"})
+				}else{
+					db.query('INSERT INTO Contains (Username, ID, StartDate, DueDate, Location) VALUES(?,?,?,?,?)',
+					[req.body.Username, req.body.Game_ID, req.body.StartDate.slice(0, 10), req.body.DueDate.slice(0, 10), req.body.Location],(err1,rows)=>{
+						if (err1) {
+							res.send({Success: false, Message: "Failed to add to cart"})
+						} else {
+							res.send({Success: true, Message: "Item added to cart"})
+						}
+					})
+				}
+			}
+		})
+	}else{
+		res.send({Success: false, Message: "Please select a valid start and end date"})
+	}
 })
 
 

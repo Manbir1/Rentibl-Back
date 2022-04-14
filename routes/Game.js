@@ -8,8 +8,10 @@ Endpoint 1:
 Description: Get game info.
 URL: http://localhost:3001/api/game/{id}
 Method: GET
-Output [{
-“price”: double,
+Input: None
+Output: 
+[{
+	“price”: double,
 	“title”: String,
 	“ESRB”: String,
 	“description” : String,
@@ -34,7 +36,7 @@ URL: http://localhost:3001/api/game
 Method: POST
 Input:
 [{
-“price”: double,
+	“price”: double,
 	“title”: String,
 	“ESRB”: String,
 	“description” : String,
@@ -43,8 +45,10 @@ Input:
 	“admin_id” : int,
 	“imgURL” : String
 }]
-Output: id
-
+Output: 
+[{
+	id: int
+}]
 */
 router.post('/', (req,res)=>{
 	const q = 'INSERT INTO Video_Game (Price,Title,ESRB_Rating,Description,PublisherName,ConsoleName,Admin_ID,IMG_URL) VALUES(?,?,?,?,?,?,?,?)'
@@ -67,10 +71,13 @@ URL: http://localhost:3001/api/game
 Method: DELETE
 Input:
 [{
-	"adminId",
-	"gameId"
+	"adminId": int,
+	"gameId": int
 }]
-Output: success
+Output: 
+[{
+	"success": boolean
+}]
 */
 router.delete('/',(req,res)=>{
 
@@ -100,7 +107,7 @@ router.delete('/',(req,res)=>{
 })
 
 /*
-Endpoint 3:
+Endpoint 4:
 Description: Update game info
 URL: http://localhost:3001/api/game/{id}
 Method: PUT
@@ -115,7 +122,10 @@ Input:
 	“A_id” : int,
 	“imgURL” : String
 }]
-Output: id
+Output:
+[{
+	"id": int
+}]
 */
 router.put('/:id', (req,res)=>{
 	let adminValid = true
@@ -148,12 +158,15 @@ router.put('/:id', (req,res)=>{
 })
 
 /* 
-Endpoint 4:
+Endpoint 5:
 Description: Get rating of video game with specified id:
 URL: http://localhost:3001/api/game/{id}/rating
 Method: GET
-Output: “rating”: int
-
+Input: None
+Output: 
+[{
+	“rating”: int
+}]
 */
 router.get('/:id/rating', (req,res)=>{
     const { id } = req.params
@@ -174,7 +187,7 @@ router.get('/:id/rating', (req,res)=>{
 })
 
 /*
-Endpoint 5:
+Endpoint 6:
 Description: User creates review for video game they bought:
 URL:  http://localhost:3001/api/game/{id}/review
 Method: POST
@@ -185,7 +198,8 @@ Input:
 	“title” : String,
 	“comment” : String,
 }]
-Output: {
+Output: 
+[{
 	“Username” : String,
 	“Rating”:   Int,
 	“Title” : String,
@@ -193,7 +207,6 @@ Output: {
 	"ReviewNumber": Int
 } if success, null otherwise
 */
-
 router.post('/:id/review', (req,res)=>{
     const { id } = req.params
 	db.query('SELECT MAX(ReviewNumber) AS m FROM Review WHERE id=?',[id],(err,rows)=>{
@@ -215,9 +228,8 @@ router.post('/:id/review', (req,res)=>{
 	})
 })
 
-
 /* 
-Endpoint 6:
+Endpoint 7:
 Description: User deletes review for video game they bought:
 URL:  http://localhost:3001/api/game/{id}/review
 Method: DELETE
@@ -226,7 +238,10 @@ Input:
 	“username” : String,
 	"ReviewNumber": Int
 }]
-Output: “success”: boolean
+Output: 
+[{
+	“success”: boolean
+}]
 */
 router.delete('/:id/review',(req,res)=>{
     const { id } = req.params
@@ -242,10 +257,8 @@ router.delete('/:id/review',(req,res)=>{
 	})
 })
 
-
 /*
-
-Endpoint 7:
+Endpoint 8:
 Description: Get all reviews for game
 URL: http://localhost:3001/api/game/{id}/review
 Method: GET
@@ -253,12 +266,12 @@ Input: None
 Output:
 [{
 	[{
-	“Username” : String,
-	“Rating”:   Int,
-	“Title” : String,
-	“Comment” : String,
-	“DateWritten”: Date,
-	"ReviewNumber: Int
+		“Username” : String,
+		“Rating”:   Int,
+		“Title” : String,
+		“Comment” : String,
+		“DateWritten”: Date,
+		"ReviewNumber: Int
 	}]
 }]
  */
@@ -272,16 +285,16 @@ router.get('/:id/review', (req,res)=>{
 })
 
 /* 
-Endpoint 22:
+Endpoint 9:
 Description: Get all game consoles currently stored int the database
 URL: http://localhost:3001/api/game/info/consoles
 Method: GET
-Output:  [{
+Input: None
+Output:
+[{
 	“consoles” : [string]
 }]
-
 */
-
 router.get('/info/consoles',(req,res)=>{
 	db.query('SELECT Name FROM Console',(err,rows)=>{
 		if(err)
@@ -291,16 +304,16 @@ router.get('/info/consoles',(req,res)=>{
 })
 
 /* 
-Endpoint 23:
+Endpoint 10:
 Description: Get all game publishers currently stored int the database
 URL: http://localhost:3001/api/game/info/publishers
 Method: GET
-Output:  [{
+Input: None
+Output:  
+[{
 	“publishers” : [string]
 }]
-
 */
-
 router.get('/info/publishers',(req,res)=>{
 	db.query('SELECT Name FROM Publisher',(err,rows)=>{
 		if(err)
@@ -310,15 +323,16 @@ router.get('/info/publishers',(req,res)=>{
 })
 
 /* 
-Endpoint 24:
+Endpoint 11:
 Description: Get all game locations currently stored int the database
 URL: http://localhost:3001/api/game/info/locations
 Method: GET
-Output:  [{
+Input: None
+Output:
+[{
 	“locations” : [string]
 }]
 */
-
 router.get('/info/locations',(req,res)=>{
 	db.query('SELECT DISTINCT Location FROM Publisher',(err,rows)=>{
 		if(err)
@@ -328,6 +342,17 @@ router.get('/info/locations',(req,res)=>{
 	})
 })
 
+/* 
+Endpoint 12:
+Description: Get all warehouses currently stored int the database
+URL: http://localhost:3001/api/game/info/warehouses
+Method: GET
+Input: None
+Output:
+[{
+	"warehouses" : [string]
+}]
+*/
 router.get('/info/warehouses',(req,res)=>{
 	db.query('SELECT * FROM Warehouse', (err,rows)=>{
 		if(err)

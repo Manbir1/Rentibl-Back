@@ -6,8 +6,11 @@ const router = express.Router()
 Description: Get user Username and password
 URL: http://localhost:3001/api/user/login
 Method: POST
-Input: Username, Password
-Output [{
+Input: [{
+    "Username": String,
+    "Password": String
+}]
+Output: [{
 	“success” : Boolean,
    	"admin": Int,
 }]*/
@@ -79,18 +82,18 @@ router.post('/login',(req,res)=>{
 
 /*Endpoint 19: Account Sign-up
 Description: Set customer information in database
-URL: https://localhost:3001/api/user
+URL: http://localhost:3001/api/user
 Method: POST
 Input: [{
-    "First Name": string
-    "Last Name": string
-    "Username": string
-    "Email": string
-    "Password": string
-    "Phone Number": string,
+    "FirstName": string,
+    "LastName": string,
+    "Username": string,
+    "email": string,
+    "Password": string,
+    "PhoneNumber": string,
     “cardNumber”:string,
     “cardholderName”: string,
-    “cvv”: int,
+    “cvv”: String,
     “exDate”: Date
 }]
 */
@@ -109,28 +112,33 @@ router.post('/',(req,res)=>{
 
     //search if user already exists AS CUSTOMER
     db.query("SELECT * FROM CUSTOMER AS C WHERE Username = ?", [user], (err, connection) => {
-        if (err) 
-            throw (err)
+        if (err) {
+            throw err
+        }
 
         //insert data into CUSTOMER table if they dont exist
         //Customer username found
         if (connection.length != 0) {
             console.log("--------> Customer already exists")
             res.sendStatus(409)
+            return
         }
         //Customer username not found
         else{
             //Insert data into appropriate tables
             db.query("INSERT INTO CUSTOMER (Username, FirstName, LastName, Email, Password, PhoneNumber) VALUES(?,?,?,?,?,?)",
             [user, fname, lname, email, password, phone], (err, data) => {
-                if (err) 
+                if (err) {
                     res.send(400)
+                    return
+                }
 
-                
                 db.query("INSERT INTO BANKING_INFO (Card_Number, Cardholder_Name, Expiry_Date, CVV, Username) VALUES(?,?,?,?,?)",
                 [cNum, cName, expiry, cvv, user], (err, data) => {
-                    if (err) 
+                    if (err) {
                         res.send(400)
+                        return
+                    }
                 }) 
             })
             

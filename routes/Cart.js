@@ -15,7 +15,6 @@ Input [{
 	"Location": String
 }]
 Output: “Success”: boolean
-
 */
 
 router.post('/',(req,res)=>{

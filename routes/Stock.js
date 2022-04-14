@@ -38,16 +38,16 @@ Input: [{
 Endpoint 12:
 Description: Verify if game has stock available in any warehouses
 URL: http://localhost:3001/api/stock
-Method: GET
+Method: POST
 Input: [{
 	“g_id”: Int,
 }]
 Output: “inStock” : Boolean
  */
 
-router.get('/',(req,res)=>{
-	const id = req.g_id
-	db.query('SELECT * FROM VIDEO_GAME AS V, HAS_STOCK AS H WHERE H.QUANTITY > 0 V.ID = H.ID AND V.ID = ?',[id],(err,data)=>{
+router.post('/',(req,res)=>{
+	const id = req.body.g_id
+	db.query('SELECT * FROM VIDEO_GAME AS V, HAS_STOCK AS H WHERE H.QUANTITY > 0 AND V.ID = H.ID AND V.ID = ?',[id],(err,data)=>{
         if(err)
             throw err
 		
@@ -63,6 +63,17 @@ router.get('/',(req,res)=>{
     
 })
 
+/*
+Endpoint 13: Get specific game availability in all locations
+Description: Get specific game availability in all locations
+URL: http://localhost:3001/api/stock/individual/{id}
+Method: POST
+Input: 
+Output: [{
+	"Location": String,
+	"Quantity": Int
+}]
+ */
 router.get('/individual/:id',(req,res)=>{
 	const { id } = req.params
 	db.query('SELECT Location, Quantity FROM HAS_STOCK WHERE ID=?',[id],(err,data)=>{

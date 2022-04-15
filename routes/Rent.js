@@ -2,14 +2,17 @@ const express = require('express')
 const db = require('../db');
 const router = express.Router()
 
-/*Endpoint 13:
+/* 
+Endpoint 18:
 Description: Get all game id’s
 URL: http://localhost:3001/api/rent
 Method: GET
-Output: [{
+Input: None
+Output: 
+[{
 	“gIds” : [ints]
-}]*/
-
+}]
+*/
 router.get('/',(req,res)=>{
 	db.query('SELECT ID FROM VIDEO_GAME',(err,rows)=>{
 		if(err)
@@ -18,12 +21,13 @@ router.get('/',(req,res)=>{
 	})
 })
 
-
-/*Endpoint 14:
+/*
+Endpoint 19:
 Description: Get filtered games
 URL: http://localhost:3001/api/rent/filter
 Method: POST
-Input: [{
+Input: 
+[{
 	“consoles”: [string] (array of consoles),
 	“genres”: [string] (array of genres),
 	“publishers”: [string](array of publishers),
@@ -32,10 +36,11 @@ Input: [{
 	“rating”: int, 
 	“locations”: [string]
 }]
-Output: [{
+Output: 
+[{
 	ID : [ints]
-}]*/
-
+}]
+*/
 router.post('/filter', (req,res)=> {
 	db.query('SELECT * FROM VIDEO_GAME AS V, Publisher AS P WHERE V.PublisherName = P.Name',async(err,data)=>{
 		if(err)
@@ -83,14 +88,17 @@ router.post('/filter', (req,res)=> {
 	})
 })
 
-/*Endpoint 25:
+/*
+Endpoint 20:
 Description: Get games user rents
-URL: http://localhost:3001/api/rent/:user/games
+URL: http://localhost:3001/api/rent/{user}/games
 Method: GET
-Output: [{
-	ID : [ints]
-}]*/
-
+Input: None
+Output: 
+[{
+	ID: [ints]
+}]
+*/
 router.get('/:user/games',(req,res)=>{
 	const { user } = req.params
 	db.query('SELECT * FROM Rents WHERE Username=?',[user],(err,rows)=>{
@@ -99,7 +107,5 @@ router.get('/:user/games',(req,res)=>{
 		res.send(rows)
 	})
 })
-
-
 
 module.exports = router

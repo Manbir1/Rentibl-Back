@@ -3,11 +3,12 @@ const db = require('../db');
 const router = express.Router()
 
 /*
-Endpoint 15: Making offers (Submitting current offer)
+Endpoint 21:
 Description: Send offer to sell
 URL: http://localhost:3001/api/sell
 Method: POST
-Input: [{
+Input: 
+[{
     "Username”: string,
     “OfferValue”: double,
     “Title”: string,
@@ -15,9 +16,11 @@ Input: [{
     “PublisherName”: string,
     “WarehouseLocation”: String
 }]
-Output: “ID”:int
+Output: 
+[{
+	“ID”:int
+}]
 */
-
 router.post('/',(req,res)=>{
 	// let newGame = false
 	// let newGameID
@@ -78,22 +81,20 @@ router.post('/',(req,res)=>{
 })
 
 /*
-Endpoint 16: Making offers (Displaying previous offers they’ve made)
+Endpoint 22:
 Description: Get previous offers
 URL: http://localhost:3001/api/sell/{Username}
 Method: GET
-Input: [{
-    "Username”: string
-}]
-Output [{
+Input: None
+Output 
+[{
     “Offers” : [{
 		“ID” : int
 		“OfferValue” : double
 		“Status” : string
-}]
+	}]
 }]
 */
-
 router.get('/:Username', (req,res)=>{
 	const { Username } = req.params
 	db.query('SELECT ID, OfferValue, Status FROM Makes_Offers WHERE Username=?',[Username],(err,data)=>{
@@ -108,24 +109,22 @@ router.get('/:Username', (req,res)=>{
 })
 
 /*
-Endpoint 17: Get Offers
+Endpoint 23:
 Description: Admin view for getting offers from a warehouses they manage
 URL: http://localhost:3001/api/sell/admin/{Admin_ID}
 Method: GET
-Input: [{
-    “Admin_ID”: int
-}]
-Output: [{
+Input: None
+Output: 
+[{
 	 “Offer” : [{
 		“Username”: String
 		“ID” : int
 		“OfferValue” : double
 		“Status” : string
 		"Location": string
-}]
+	}]
 }]
 */
-
 router.get('/admin/:Admin_ID', (req,res)=>{
 	db.query('SELECT M.Username, ID, OfferValue, Status, M.Location FROM Admin AS A, Makes_Offers AS M, Manages AS K WHERE A.Admin_ID=? AND A.Admin_ID=K.Admin_ID AND M.Location=K.Location AND Status="Pending"',[req.params.Admin_ID],(err,data)=>{
 		if (err) {
@@ -137,7 +136,8 @@ router.get('/admin/:Admin_ID', (req,res)=>{
 	})
 })
 
-/*Endpoint 21: 
+/*
+Endpoint 24: 
 Description: Admin accepts/declines offer
 URL: http://localhost:3001/api/sell/admin/decision
 Method: PUT
@@ -147,9 +147,11 @@ Input: [{
 	“Username”: String
 	“ID” : int
 }]
-Output: “Status”: boolean
+Output: 
+[{
+	“Status”: boolean
+}]
 */
-
 router.put('/admin/decision',(req,res)=>{
 
 	console.log(req.body)

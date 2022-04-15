@@ -2,19 +2,22 @@ const express = require('express')
 const db = require('../db');
 const router = express.Router()
 
-/*Endpoint 18: Logging in (admin and customer)
-Description: Get user Username and password
+/*
+Endpoint 27:
+Description: Verify login
 URL: http://localhost:3001/api/user/login
 Method: POST
-Input: [{
+Input: 
+[{
     "Username": String,
     "Password": String
 }]
-Output: [{
+Output: 
+[{
 	“success” : Boolean,
    	"admin": Int,
-}]*/
-
+}]
+*/
 router.post('/login',(req,res)=>{
     const user = req.body.Username
     const password = req.body.Password
@@ -80,11 +83,13 @@ router.post('/login',(req,res)=>{
     })
 })
 
-/*Endpoint 19: Account Sign-up
-Description: Set customer information in database
+/*
+Endpoint 28: 
+Description: Create account sign-up
 URL: http://localhost:3001/api/user
 Method: POST
-Input: [{
+Input: 
+[{
     "FirstName": string,
     "LastName": string,
     "Username": string,
@@ -96,11 +101,11 @@ Input: [{
     “cvv”: String,
     “exDate”: Date
 }]
-Output: [{
+Output: 
+[{
     Username: String
 }]
 */
-
 router.post('/',(req,res)=>{
     const user = req.body.Username
     const password = req.body.Password

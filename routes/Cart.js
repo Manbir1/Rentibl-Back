@@ -3,7 +3,7 @@ const db = require('../db');
 const router = express.Router()
 
 /*
-Endpoint 8:
+Endpoint 14:
 Description: Add item to cart for user
 URL: http://localhost:3001/api/cart
 Method: POST
@@ -19,7 +19,6 @@ Output: {
 	"Message": string
 	}
 */
-
 const dayInMili = 86400000
 
 router.post('/',(req,res)=>{
@@ -49,9 +48,8 @@ router.post('/',(req,res)=>{
 	}
 })
 
-
 /* 
-Endpoint 9:
+Endpoint 15:
 Description: Delete item from cart for user
 URL: http://localhost:3001/api/cart
 Method: DELETE
@@ -60,9 +58,11 @@ Input [{
 	“Username”: String,
 	"Location": String
 }]
-Output: “Success”: boolean
+Output: 
+[{
+	“Success”: boolean
+}]
 */
-
 router.delete('/',(req,res)=>{
 	db.query('DELETE FROM Contains AS C WHERE C.Username=? AND C.ID=? AND C.Location=?',[req.body.Username, req.body.Game_ID, req.body.Location],(err,data)=>{
 		if (err) {
@@ -74,13 +74,11 @@ router.delete('/',(req,res)=>{
 })
 
 /*
-Endpoint 10:
+Endpoint 16:
 Description: Get all items from a shopping cart
 URL: http://localhost:3001/api/cart/{Username}
 Method: GET
-Input: [{
-	“Username”: String
-}]
+Input: None
 Output: [{
 	[{
 		“ID”: Int (This is game_id)
@@ -90,7 +88,6 @@ Output: [{
 	}]
 }]
  */
-
 router.get('/:Username',(req,res)=>{
 	const { Username } = req.params
 	db.query('SELECT ID, StartDate, DueDate, Location FROM Contains AS C WHERE C.Username=?',[Username],(err,data)=>{
@@ -103,17 +100,18 @@ router.get('/:Username',(req,res)=>{
 })
 
 /*
-Endpoint 20: Checkout
-Description: User purchases item and purchase is stored in database
+Endpoint 17:
+Description: Checkout items in cart
 URL: http://localhost:3001/api/cart/checkout
 Method: POST
 Input: [{
 	“Username”: String
 }]
-Output: “Status”: boolean
-
+Output: 
+[{
+	“Status”: boolean
+}]
 */
-
 router.post('/checkout',(req,res)=>{
 	db.query('SELECT * FROM Contains AS C WHERE C.Username=?',[req.body.Username],(err,data)=>{
 		if (err) {

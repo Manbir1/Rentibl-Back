@@ -388,6 +388,17 @@ router.get('/info/warehouses',(req,res)=>{
 	})
 })
 
+/* 
+Endpoint 13:
+Description: Get all genres currently stored int the database
+URL: http://localhost:3001/api/game/info/genre
+Method: GET
+Input: None
+Output:
+[{
+	"generes" : [string]
+}]
+*/
 router.get('/info/genre',(req,res)=>{
 	db.query('SELECT GenreName FROM Genre', (err,rows)=>{
 		if(err)

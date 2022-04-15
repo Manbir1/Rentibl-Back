@@ -77,7 +77,7 @@ CREATE TABLE Banking_Info
 (
     CardNumber CHAR(16) NOT NULL,
     CardholderName VARCHAR(255),
-    ExpiryDate CHAR(4),
+    ExpiryDate CHAR(7),
     CVV CHAR(3),
     Username VARCHAR(20),
     PRIMARY KEY (CardNumber),

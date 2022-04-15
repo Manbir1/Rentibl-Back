@@ -151,21 +151,16 @@ Output: “Status”: boolean
 */
 
 router.put('/admin/decision',(req,res)=>{
+
+	console.log(req.body)
     if (req.body.Decision) {
 
-		let location = ''
-
-		db.query('SELECT Location FROM Makes_Offers AS K WHERE K.Username=? AND K.ID=? AND K.Status=?',[req.body.Username,req.body.ID,"Pending"],(err,data)=>{
-			if(err)
-				throw err
-			location = data[0].Location
-		})
-
-		db.query('SELECT * FROM Has_Stock AS H WHERE Location=? AND ID = ?',[location,req.body.ID],(err,data)=>{
+		db.query('SELECT * FROM Has_Stock AS H WHERE Location IN (SELECT Location FROM Makes_Offers AS K WHERE K.Username=? AND K.ID=? AND K.Status=?) AND ID = ?',[req.body.Username,req.body.ID,"Pending",req.body.ID],(err,data)=>{
 			if(err)
 				throw err 
+			console.log(data)
 			if(data.length == 0){
-				db.query('INSERT INTO Has_Stock(Location,ID,Quantity) VALUES(?,?,?)',[location,req.body.ID,1],(err1,data)=>{
+				db.query('INSERT INTO Has_Stock(Location,ID,Quantity) VALUES(?,?,?)',[data[0].Location,req.body.ID,1],(err1,data)=>{
 					if(err1)
 						throw err1 
 					else{

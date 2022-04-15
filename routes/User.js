@@ -96,6 +96,9 @@ Input: [{
     “cvv”: String,
     “exDate”: Date
 }]
+Output: [{
+    Username: String
+}]
 */
 
 router.post('/',(req,res)=>{
@@ -120,7 +123,7 @@ router.post('/',(req,res)=>{
         //Customer username found
         if (connection.length != 0) {
             console.log("--------> Customer already exists")
-            res.sendStatus(409)
+            res.send(null)
             return
         }
         //Customer username not found
@@ -129,20 +132,23 @@ router.post('/',(req,res)=>{
             db.query("INSERT INTO CUSTOMER (Username, FirstName, LastName, Email, Password, PhoneNumber) VALUES(?,?,?,?,?,?)",
             [user, fname, lname, email, password, phone], (err, data) => {
                 if (err) {
-                    res.send(400)
+                    res.send(null)
                     return
-                }
+                }else{
 
-                db.query("INSERT INTO BANKING_INFO (Card_Number, Cardholder_Name, Expiry_Date, CVV, Username) VALUES(?,?,?,?,?)",
-                [cNum, cName, expiry, cvv, user], (err, data) => {
-                    if (err) {
-                        res.send(400)
-                        return
-                    }
-                }) 
+                    db.query("INSERT INTO BANKING_INFO (Card_Number, Cardholder_Name, Expiry_Date, CVV, Username) VALUES(?,?,?,?,?)",
+                    [cNum, cName, expiry, cvv, user], (err, data) => {
+                        if (err) {
+                            res.send(null)
+                            return
+                        }
+                        else{
+                            res.send({Username: user})
+                        }
+
+                    }) 
+                }
             })
-            
-            res.send(201)
         }   
     })
 })

@@ -230,11 +230,6 @@ INTO Admin
 VALUES
 ("Sami","Zeremariam","SamiZ1","aram");
 
-INSERT INTO Genre (GenreName,ParentGenre) VALUES ("RPG",NULL);
-INSERT INTO Genre (GenreName,ParentGenre) VALUES ("JRPG","RPG");
-INSERT INTO Genre (GenreName,ParentGenre) VALUES ("MMORPG","RPG");
-INSERT INTO Genre (GenreName,ParentGenre) VALUES ("Shooter",NULL);
-INSERT INTO Genre (GenreName,ParentGenre) VALUES ("Arcarde Shooter","Shooter");
 
 INSERT INTO Console (Name) VALUES ("Playstation 5");
 INSERT INTO Console (Name) VALUES ("Playstation 4");
@@ -486,7 +481,10 @@ VALUES ("Crowfoot",1);
 INSERT INTO Manages(Location, Admin_ID)
 VALUES ("Crowfoot",2);
 
-
-
-
-
+INSERT INTO Genre(GenreName) VALUES('RPG');
+INSERT INTO Genre(GenreName) VALUES('Action');
+INSERT INTO Genre(GenreName) VALUES('Puzzle');
+INSERT INTO Genre(GenreName) VALUES('Adventure');
+INSERT INTO Genre(GenreName, ParentGenre) VALUES('Stealth','Action');
+INSERT INTO Genre(GenreName, ParentGenre) VALUES('JRPG','RPG');
+INSERT INTO Categorized(GenreName,ID) VALUES('Adventure',1)

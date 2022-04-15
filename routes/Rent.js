@@ -36,8 +36,8 @@ Output: [{
 	ID : [ints]
 }]*/
 
-router.post('/filter',(req,res)=>{
-	db.query('SELECT * FROM VIDEO_GAME AS V, Publisher AS P WHERE V.PublisherName = P.Name',(err,data)=>{
+router.post('/filter', (req,res)=> {
+	db.query('SELECT * FROM VIDEO_GAME AS V, Publisher AS P WHERE V.PublisherName = P.Name',async(err,data)=>{
 		if(err)
 			throw err
 
@@ -52,7 +52,30 @@ router.post('/filter',(req,res)=>{
 			data = data.filter((e)=>(e.Price>=req.body.prices[0] && e.Price<=req.body.prices[1]))
 		if(req.body.esrb_ratings.length>0)
 			data = data.filter((e)=>req.body.esrb_ratings.includes(e.ESRB_Rating))
-		//data = data.filter((e)=>getRating(e.ID)>=req.body.rating)
+		if(req.body.genres.length > 0){
+			const tempArr = []
+			for(let i = 0;i<data.length;i++){
+				let getGenres = []
+
+				const query = new Promise((resolve, reject) => {
+					db.query('SELECT GenreName FROM Categorized WHERE ID=?', [data[i].ID],(err, res) => {
+						if(err)
+							throw err
+						getGenres = res.map((e)=> e.GenreName)
+						resolve();
+					});
+				});
+
+				await query
+										
+				const filteredArray = req.body.genres.filter(value => getGenres.includes(value));
+				if(filteredArray.length>0){
+					tempArr.push(data[i])
+				}
+			}
+
+			data = tempArr
+		}
 		if(req.body.locations.length>0)
 			data = data.filter((e) => req.body.locations.includes(e.Location))
 

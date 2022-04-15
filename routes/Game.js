@@ -1,4 +1,6 @@
-const express = require('express')
+const express = require('express');
+const { send } = require('express/lib/response');
+const { getMaxListeners } = require('../db');
 const db = require('../db');
 const router = express.Router()
 
@@ -44,6 +46,7 @@ Input:
 	“console”: String
 	“admin_id” : int,
 	“imgURL” : String
+	"genres" : [String]
 }]
 Output: 
 [{
@@ -51,7 +54,7 @@ Output:
 }]
 */
 router.post('/', (req,res)=>{
-	
+	const { genres } = req.body
 	const q = 'INSERT INTO Video_Game (Price,Title,ESRB_Rating,Description,PublisherName,ConsoleName,Admin_ID,IMG_URL) VALUES(?,?,?,?,?,?,?,?)'
 	db.query(q,
 		[req.body.price,req.body.title,req.body.ESRB,req.body.description,req.body.publisher,req.body.console,req.body.admin_id,req.body.imgURL],(err,data)=>{
@@ -60,7 +63,12 @@ router.post('/', (req,res)=>{
 				throw err
 			}else{
 				db.query('SELECT LAST_INSERT_ID() AS id',(err,data)=>{
-					console.log(data)
+					for(let i = 0;i<genres.length;i++){
+						db.query('INSERT INTO Categorized(GenreName,ID) VALUES (?,?)',[genres[i],data[0].id], (err1,data1)=>{
+							if(err)
+								throw err 
+						})
+					}
 					res.send({id: data[0].id})
 				})
 			}
@@ -121,7 +129,7 @@ Input:
 	“description” : String,
 	“publisher”: String,
 	“console”: String,
-	“genre”: String,
+	“genres”: [String],
 	“A_id” : int,
 	“imgURL” : String
 }]
@@ -134,6 +142,7 @@ router.put('/:id', (req,res)=>{
 	let adminValid = true
 
 	const { id } = req.params
+	const { genres } = req.body
 
 	db.query('SELECT Admin_ID FROM Video_Game WHERE ID=?',[req.body.gameId], (err,data)=>{
 		if(err)
@@ -152,6 +161,19 @@ router.put('/:id', (req,res)=>{
 				res.send({id: -1});
 				throw err
 			}else{
+				db.query('DELETE FROM Categorized WHERE ID=?',[id],(err,data)=>{
+					if(err)
+						throw err 
+					else{
+						for(let i = 0;i<genres.length;i++){
+							db.query('INSERT INTO Categorized(GenreName,ID) VALUES (?,?)',[genres[i],id], (err1,data1)=>{
+								if(err)
+									throw err 
+							})
+						}
+					}
+				})
+
 				res.send({id: id})
 			}
 		})
@@ -363,6 +385,15 @@ router.get('/info/warehouses',(req,res)=>{
 		else 
 			res.send(rows)
 
+	})
+})
+
+router.get('/info/genre',(req,res)=>{
+	db.query('SELECT GenreName FROM Genre', (err,rows)=>{
+		if(err)
+			res.send([])
+		else
+			res.send(rows)
 	})
 })
 

@@ -141,16 +141,15 @@ router.post('/',(req,res)=>{
                     return
                 }else{
 
-                    db.query("INSERT INTO BANKING_INFO (Card_Number, Cardholder_Name, Expiry_Date, CVV, Username) VALUES(?,?,?,?,?)",
-                    [cNum, cName, expiry, cvv, user], (err, data) => {
+                    db.query("INSERT INTO BANKING_INFO (CardNumber, CardholderName, ExpiryDate, CVV, Username) VALUES(?,?,?,?,?)",
+                    [cNum, cName, expiry.slice(4,10), cvv, user], (err, data) => {
                         if (err) {
                             res.send(null)
-                            return
+                            throw err
                         }
                         else{
                             res.send({Username: user})
                         }
-
                     }) 
                 }
             })

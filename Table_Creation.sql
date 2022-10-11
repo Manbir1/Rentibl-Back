@@ -488,3 +488,4 @@ INSERT INTO Genre(GenreName) VALUES('Adventure');
 INSERT INTO Genre(GenreName, ParentGenre) VALUES('Stealth','Action');
 INSERT INTO Genre(GenreName, ParentGenre) VALUES('JRPG','RPG');
 INSERT INTO Categorized(GenreName,ID) VALUES('Adventure',1)
+
